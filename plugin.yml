@@ -1,0 +1,11 @@
+name: FFA
+version: pa0.1-b55
+main: mc.sseakk.ffa.mainpackage.FFA
+authors: [sSeaKk]
+description: FFA plugin a
+
+commands:
+   ffa:
+      description: ffa global command
+   test:
+      description: command for plugin tests
