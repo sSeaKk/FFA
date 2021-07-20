@@ -1,8 +1,8 @@
 name: FFA
-version: pa0.1-b55_3
+version: pa0.1-b80
 main: mc.sseakk.ffa.mainpackage.FFA
 authors: [sSeaKk]
-description: FFA plugin (test merge)
+description: FFA plugin
 
 commands:
    ffa:
