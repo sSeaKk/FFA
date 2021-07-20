@@ -1,5 +1,6 @@
 package mc.sseakk.ffa.mainpackage;
 
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,6 +13,8 @@ import java.util.Scanner;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import mc.sseakk.ffa.util.Messages;
+
 public class FileManager {
 	private FFA plugin;
 	
@@ -20,23 +23,19 @@ public class FileManager {
 	
 	private FileConfiguration arenas = null;
 	private File arenasFile = null, 
-			path;
-	
+				 path,
+				 file = null;
+	private FileWriter filewriter = null;
+	private PrintWriter printwriter = null;
+	private BufferedWriter bufferedWriter = null;
+	private Scanner scanner = null;
 	
 	public FileManager() {
 		this.plugin = FFA.getInstance();
 		registerConfig();
-		registerArenas();
 		this.path = null;
 	}
-	
-	public FileConfiguration getArenas() {
-		if(arenas == null) {
-			reloadArenas();
-		}
-		return arenas;
-	}
-	
+  
 	public void registerConfig() {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		rutaConfig = config.getPath();
@@ -46,7 +45,14 @@ public class FileManager {
 		}
 	}
 	
-	@SuppressWarnings("unused")
+	/*public FileConfiguration getArenas() {
+		if(arenas == null) {
+			reloadArenas();
+		}
+		return arenas;
+	}
+	
+	/*@SuppressWarnings("unused") (ARENAS.YML no usado)
 	public void reloadArenas() {
 		if(arenas == null) {
 			arenasFile = new File(this.plugin.getDataFolder(), "arenas.yml");
@@ -72,71 +78,57 @@ public class FileManager {
 		}
 	}
 	
-	public void registerArenas() {
+
+	/*public void registerArenas() {
 		arenasFile = new File(this.plugin.getDataFolder(), "arenas.yml");
 		if(!arenasFile.exists()) {
 			this.getArenas().options().copyDefaults(true);
 			saveArenas();
 		}
-	}
+	}*/
 	
-	public void createFile(String fileName, String path) throws IOException {
+	public File createFile(String path, String fileName){
         this.path = new File(plugin.getDataFolder().getPath() + path);
         if(!this.path.exists()){
             this.path.mkdirs();
         }
         
-        File file = new File(this.path, fileName);
-        FileWriter fw = new FileWriter(file);
-        PrintWriter pw = new PrintWriter(fw);
+        try {
+        	this.file = new File(this.path, fileName + ".txt");
+        	this.filewriter = new FileWriter(file);
+        	this.printwriter = new PrintWriter(this.filewriter);
+        	this.bufferedWriter = new BufferedWriter(printwriter);
+        	this.scanner = new Scanner(this.file);
         
-        pw.close();
+        	return this.file;
+        } catch(IOException e) {
+        	e.printStackTrace();
+        }
+        
+        return null;
     }
 	
-	public void deleteFile(String fileName, String path){
-		this.path = new File(plugin.getDataFolder().getPath() + path);
-		File file = new File(this.path, fileName);
-        
-		if(!file.delete()) {
-			System.out.println("El archivo " + "'" + fileName + "' "+ "no existe" 
-					+ "\n Path: " + this.path);
+	public void deleteFile(String path){
+		File f = new File(plugin.getDataFolder().getPath() + path);
+		if(!f.delete()) {
+			Messages.warningMessage("El archivo no existe! (PATH: " + this.file.getPath() + ")");
 			return;
 		}
-		
-		System.out.println("Completado");
 	}
 	
-	public void writeFile(String fileName, String path, String text) throws IOException {
-		this.path = new File(plugin.getDataFolder().getPath() + path);
-		File file = new File(this.path, fileName);
-		
-		
-		if(file.exists()) {
-	        FileWriter fw = new FileWriter(file);
-	        PrintWriter pw = new PrintWriter(fw);
-	        
-	        pw.write(text);
-	        pw.close();
-		} else {
-			System.out.println("El archivo " + "'" + fileName + "' "+ "no existe" 
-								+ "\n Path: " + this.path);
-		}
+	public FileWriter getFileWriter() {
+		return filewriter;
+	}
+
+	public PrintWriter getPrintWriter() {
+		return printwriter;
 	}
 	
-	public void readFile(String path) throws Exception {
-		File file = new File(plugin.getDataFolder().getPath()+path);
-		Scanner sc = new Scanner(file);
-		String st = "";
-		
-		while(sc.hasNextLine()) {
-			st = sc.nextLine();
-			System.out.println(st);
-			
-			if(st.contains("hola") || st.contains("Hola")) {
-				System.out.println(true);
-			} else {
-				System.out.println(false);
-			}
-		}
+	public BufferedWriter getBufferedWriter() {
+		return this.bufferedWriter;
+	}
+	
+	public Scanner getScanner() {
+		return this.scanner;
 	}
 }
