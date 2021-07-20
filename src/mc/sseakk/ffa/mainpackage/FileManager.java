@@ -1,6 +1,6 @@
 package mc.sseakk.ffa.mainpackage;
 
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,13 +30,12 @@ public class FileManager {
 	private BufferedWriter bufferedWriter = null;
 	private Scanner scanner = null;
 	
-	
 	public FileManager() {
 		this.plugin = FFA.getInstance();
 		registerConfig();
 		this.path = null;
 	}
-	
+  
 	public void registerConfig() {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
 		rutaConfig = config.getPath();
@@ -79,6 +78,7 @@ public class FileManager {
 		}
 	}
 	
+
 	/*public void registerArenas() {
 		arenasFile = new File(this.plugin.getDataFolder(), "arenas.yml");
 		if(!arenasFile.exists()) {

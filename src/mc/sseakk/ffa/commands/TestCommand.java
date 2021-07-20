@@ -2,8 +2,6 @@ package mc.sseakk.ffa.commands;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,8 +31,9 @@ public class TestCommand implements CommandExecutor{
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+    }
+    
 		return true;
+    }
 	}
 }

@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
 import mc.sseakk.ffa.game.FFAPlayer;
+
 public class ArenasManager {
 	private FileManager fm;
 	
@@ -30,7 +31,7 @@ public class ArenasManager {
 				return arena;
 			}
 		}
-		
+	  
 		return null;
 	}
 	
@@ -47,7 +48,7 @@ public class ArenasManager {
 				}
 			}
 		}
-		
+	  
 		return null;
 	}
 	
