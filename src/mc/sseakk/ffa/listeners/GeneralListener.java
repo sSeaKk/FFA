@@ -18,9 +18,6 @@ public class GeneralListener implements Listener{
 		
 		if(arenas != null) {
 			event.setCancelled(true);
-			Messages.sendPlayerMessage(player, "Cancelled");
-		} else {
-			Messages.sendPlayerMessage(player, "Not cancelled");
 		}
 	}
 }

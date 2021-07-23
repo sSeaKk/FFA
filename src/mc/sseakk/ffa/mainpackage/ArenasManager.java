@@ -2,15 +2,18 @@ package mc.sseakk.ffa.mainpackage;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
 import mc.sseakk.ffa.game.FFAPlayer;
-
+import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;
 	
@@ -31,7 +34,7 @@ public class ArenasManager {
 				return arena;
 			}
 		}
-	  
+		
 		return null;
 	}
 	
@@ -48,7 +51,7 @@ public class ArenasManager {
 				}
 			}
 		}
-	  
+		
 		return null;
 	}
 	
@@ -63,7 +66,7 @@ public class ArenasManager {
 	
 	public void saveArenas() {
 		for(Arena arena : this.gameArenas) {
-			File arenaFile = fm.createFile("\\arenas", arena.getName());
+			fm.createFile("\\arenas", arena.getName());
 			
 			BufferedWriter writer = fm.getBufferedWriter();
 			
@@ -81,7 +84,7 @@ public class ArenasManager {
 					writer.newLine();
 					writer.newLine();
 					
-					writer.write("Spawn:");
+					writer.write("spawn:");
 					writer.newLine();
 					
 					writer.write("x="+spawn.getX());
@@ -104,6 +107,86 @@ public class ArenasManager {
 				writer.close();
 			} catch(IOException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void loadArenas() {
+		File folder = fm.getFolder("\\arenas");
+		File[] files = folder.listFiles();
+		
+		for(File file : files) {
+			try {
+				Scanner scn = new Scanner(file);
+				boolean hasSpawn = false;
+				Arena arena = new Arena();
+				
+				World world = null;
+				double x = 0, y = 0, z = 0;
+				float yaw = 0, pitch = 0;
+				
+				while(scn.hasNextLine()) {
+					 String line = scn.nextLine(),
+							value = null;
+					 
+					 if(line.startsWith("nombre")) {
+						 value = line.replaceFirst("nombre=", "");
+						 arena.setName(value);
+					 }
+					 
+					 if(line.startsWith("estado")) {
+						 value = line.replaceFirst("estado=", "");
+						 
+						 if(value.equalsIgnoreCase("activado") || value.equalsIgnoreCase("habilitado") || value.equalsIgnoreCase("on")) {
+							 arena.setStatus(ArenaStatus.ENABLED);
+						 } else {
+							 arena.setStatus(ArenaStatus.DISABLED);
+						 }
+					 }
+					 
+					 if(line.startsWith("spawn:") || hasSpawn == true) {
+						 hasSpawn = true;
+						 
+						 if(line.startsWith("x=")) {
+							 value = line.replaceFirst("x=", "");
+							 x = Double.valueOf(value);
+						 }
+						 
+						 if(line.startsWith("y=")) {
+							 value = line.replaceFirst("y=", "");
+							 y = Double.valueOf(value);
+						 }
+						 
+						 if(line.startsWith("z=")) {
+							 value = line.replaceFirst("z=", "");
+							 z = Double.valueOf(value);
+						 }
+
+						 if(line.startsWith("yaw=")) {
+							 value = line.replaceFirst("yaw=", "");
+							 yaw = Float.valueOf(value);
+						 }
+						 
+						 if(line.startsWith("pitch=")) {
+							 value = line.replaceFirst("pitch=", "");
+							 pitch = Float.valueOf(value);
+						 }
+
+						 if(line.startsWith("world=")) {
+							 value = line.replaceFirst("world=", "");
+							 world = FFA.getInstance().getServer().getWorld(value);
+						 }
+					 }
+				 }
+				
+				if(world != null) {
+					Location spawn = new Location(world, x, y, z, yaw, pitch);
+					arena.setSpawn(spawn);
+				}
+				
+				addArena(arena);
+			} catch (FileNotFoundException e) {
+				Messages.warningMessage("Un archivo no fue encontrado, y esta causando errores\n" + e.getStackTrace());
 			}
 		}
 	}

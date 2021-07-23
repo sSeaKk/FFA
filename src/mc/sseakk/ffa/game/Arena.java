@@ -21,6 +21,12 @@ public class Arena {
 		this.currentPlayers = 0;
 	}
 	
+	public Arena() {
+		this.playerList = new ArrayList<FFAPlayer>();
+		this.status = ArenaStatus.DISABLED;
+		this.currentPlayers = 0;
+	}
+	
 	public void addPlayer(FFAPlayer ffaplayer) {
 		this.playerList.add(ffaplayer);
 		ffaplayer.getPlayer().teleport(spawn);

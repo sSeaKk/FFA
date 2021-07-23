@@ -17,7 +17,7 @@ public class FFA extends JavaPlugin{
 		fm = new FileManager();
 		
 		am = new ArenasManager();
-		//am.loadArenas();
+		am.loadArenas();
 		
 		em = new EventsManager();
 		cm = new CommandManager();
