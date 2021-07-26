@@ -15,10 +15,10 @@ public class Messages {
 	}
 	
 	public static void broadcastMessage(String message) {
-		Bukkit.getServer().broadcastMessage(message);
+		Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "[FFA] " + message));
 	}
 	
 	public static void warningMessage(String message) {
-		Bukkit.getLogger().warning(message);
+		Bukkit.getServer().getLogger().warning("[FFA] " + message);
 	}
 }

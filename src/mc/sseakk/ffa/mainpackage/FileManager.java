@@ -15,10 +15,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import mc.sseakk.ffa.util.Messages;
 
+@SuppressWarnings("unused")
 public class FileManager {
 	private FFA plugin;
 	
-	@SuppressWarnings("unused")
 	private String rutaConfig;
 	
 	private FileConfiguration arenas = null;
@@ -94,9 +94,10 @@ public class FileManager {
 	}
 	
 	public void deleteFile(String path){
-		File f = new File(plugin.getDataFolder().getPath() + path);
-		if(!f.delete()) {
-			Messages.warningMessage("El archivo no existe! (PATH: " + this.file.getPath() + ")");
+		File fileToDelete = new File(plugin.getDataFolder().getPath() + path);
+		
+		if(!fileToDelete.delete()) {
+			Messages.warningMessage("El archivo no existe! (PATH: " + fileToDelete.getPath() + ")");
 			return;
 		}
 	}

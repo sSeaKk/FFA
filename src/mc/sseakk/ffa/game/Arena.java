@@ -3,7 +3,9 @@ package mc.sseakk.ffa.game;
 import java.util.ArrayList;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
+import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 
 public class Arena {
@@ -13,12 +15,17 @@ public class Arena {
 	private Location spawn;
 	private ArrayList<FFAPlayer> playerList;
 	private ArenaStatus status;
+	private Player configurator;
+	private boolean hasFile;
 	
-	public Arena(String name) {
+	public Arena(String name, Player configurator) {
 		this.playerList = new ArrayList<FFAPlayer>();
 		this.name = name;
+		this.setConfigurator(configurator);
 		this.status = ArenaStatus.DISABLED;
 		this.currentPlayers = 0;
+		this.setHasFile(false);
+		this.spawn = null;
 	}
 	
 	public Arena() {
@@ -28,8 +35,21 @@ public class Arena {
 	}
 	
 	public void addPlayer(FFAPlayer ffaplayer) {
+		if(FFA.getArenasManager().getPlayerArena(ffaplayer.getPlayer().getName()) != null) {
+			Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&cYa estas en una arena!");
+			return;
+		}
+		
+		if(this.spawn == null) {
+			Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&cLa arena no tiene spawn");
+			return;
+		}
+		
 		this.playerList.add(ffaplayer);
+		ffaplayer.getPlayer().setFoodLevel(20);
+		ffaplayer.getPlayer().setHealth(20);
 		ffaplayer.getPlayer().teleport(spawn);
+		Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&aEntraste a " + this.name);
 	}
 	
 	public void removePlayer(FFAPlayer ffaplayer) {
@@ -94,5 +114,21 @@ public class Arena {
 
 	public int getCurrentPlayers() {
 		return currentPlayers;
+	}
+
+	public boolean isHasFile() {
+		return hasFile;
+	}
+
+	public void setHasFile(boolean hasFile) {
+		this.hasFile = hasFile;
+	}
+
+	public Player getConfigurator() {
+		return configurator;
+	}
+
+	public void setConfigurator(Player configurator) {
+		this.configurator = configurator;
 	}
 }

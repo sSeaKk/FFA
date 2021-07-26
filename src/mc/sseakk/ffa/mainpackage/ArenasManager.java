@@ -58,10 +58,17 @@ public class ArenasManager {
 	public void removeArena(String arenaName) {
 		for(Arena arena : this.gameArenas) {
 			if(arena.getName().equals(arenaName)) {
+				if(arena.isHasFile()) {
+					fm.deleteFile("\\arenas\\"+arena.getName()+".txt");
+				}
+				
 				gameArenas.remove(arena);
-				fm.deleteFile("\\arenas\\"+arenaName+".txt");
+				return;
 			}
 		}
+		
+		Messages.warningMessage("Se intento borrar una arena que no existia");
+		return;
 	}
 	
 	public void saveArenas() {
@@ -73,7 +80,7 @@ public class ArenasManager {
 			try {
 				writer.write("nombre="+arena.getName());
 				writer.newLine();
-				if(!arena.getStatus().equals(ArenaStatus.DISABLED)) {
+				if(arena.getStatus().equals(ArenaStatus.ENABLED)) {
 					writer.write("estado=activado");
 				} else {
 					writer.write("estado=desactivado");
@@ -114,12 +121,15 @@ public class ArenasManager {
 	public void loadArenas() {
 		File folder = fm.getFolder("\\arenas");
 		File[] files = folder.listFiles();
+		boolean saveFiles = false;
 		
 		for(File file : files) {
 			try {
+				@SuppressWarnings("resource")
 				Scanner scn = new Scanner(file);
 				boolean hasSpawn = false;
 				Arena arena = new Arena();
+				ArenaStatus status = null;
 				
 				World world = null;
 				double x = 0, y = 0, z = 0;
@@ -136,11 +146,10 @@ public class ArenasManager {
 					 
 					 if(line.startsWith("estado")) {
 						 value = line.replaceFirst("estado=", "");
-						 
-						 if(value.equalsIgnoreCase("activado") || value.equalsIgnoreCase("habilitado") || value.equalsIgnoreCase("on")) {
-							 arena.setStatus(ArenaStatus.ENABLED);
+						 if(value.equals("activado")) {
+							 status = ArenaStatus.ENABLED;
 						 } else {
-							 arena.setStatus(ArenaStatus.DISABLED);
+							 status = ArenaStatus.DISABLED;
 						 }
 					 }
 					 
@@ -176,18 +185,35 @@ public class ArenasManager {
 							 value = line.replaceFirst("world=", "");
 							 world = FFA.getInstance().getServer().getWorld(value);
 						 }
+						 
+						 if(world != null && arena.getSpawn() == null) {
+							 Location spawn = new Location(world, x, y, z, yaw, pitch);
+							 arena.setSpawn(spawn);
+						 }
 					 }
-				 }
-				
-				if(world != null) {
-					Location spawn = new Location(world, x, y, z, yaw, pitch);
-					arena.setSpawn(spawn);
 				}
 				
+				if(status.equals(ArenaStatus.ENABLED)) {
+					if(hasSpawn) {
+						arena.setStatus(status);
+					} else {
+						Messages.warningMessage("La arena '" + arena.getName() + "' no tiene configurada un spawn!. Desactivando arena.");
+						arena.setStatus(ArenaStatus.DISABLED);
+						saveFiles = true;
+					}
+				} else {
+					arena.setStatus(status);
+				}
+				
+				arena.setHasFile(true);
 				addArena(arena);
 			} catch (FileNotFoundException e) {
 				Messages.warningMessage("Un archivo no fue encontrado, y esta causando errores\n" + e.getStackTrace());
 			}
+		}
+		
+		if(saveFiles) {
+			saveArenas();
 		}
 	}
 }
