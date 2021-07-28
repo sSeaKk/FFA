@@ -119,8 +119,7 @@ public class FFACommand implements CommandExecutor{
 					Arena arena = am.getArena(name);
 					if(arena != null) {
 						if(arena.isEnabled()) {
-							FFAPlayer fp = new FFAPlayer(player);
-							arena.addPlayer(fp);
+							arena.addPlayer(player);
 							return true;
 						}
 						
@@ -142,7 +141,7 @@ public class FFACommand implements CommandExecutor{
 			if(args[0].equalsIgnoreCase("leave")) {
 				Arena arena = FFA.getArenasManager().getPlayerArena(player.getName());
 				if(arena != null){
-					arena.removePlayer(arena.getFFAPlayer(player.getName()));
+					arena.removePlayer(player);
 					Messages.sendPlayerMessage(player, "&6Saliste de " + arena.getName());
 					return true;
 				}

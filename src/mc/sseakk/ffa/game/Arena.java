@@ -2,11 +2,8 @@ package mc.sseakk.ffa.game;
 
 import java.util.ArrayList;
 
-import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -37,56 +34,37 @@ public class Arena {
 		this.currentPlayers = 0;
 	}
 	
-	public void addPlayer(FFAPlayer ffaplayer) {
-		if(FFA.getArenasManager().getPlayerArena(ffaplayer.getPlayer().getName()) != null) {
-			Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&cYa estas en una arena!");
+	public void addPlayer(Player player) {
+		if(FFA.getArenasManager().getPlayerArena(player.getName()) != null) {
+			Messages.sendPlayerMessage(player, "&cYa estas en una arena!");
 			return;
 		}
 		
 		if(this.spawn == null) {
-			Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&cLa arena no tiene spawn");
+			Messages.sendPlayerMessage(player, "&cLa arena no tiene spawn");
 			return;
 		}
 		
-		this.playerList.add(ffaplayer);
-		ffaplayer.getPlayer().setFoodLevel(20);
-		ffaplayer.getPlayer().setHealth(20);
-		ffaplayer.getPlayer().setGameMode(GameMode.SURVIVAL);
+		FFAPlayer fp = new FFAPlayer(player);
+		playerList.add(fp);
+		this.currentPlayers++;
+		player.teleport(spawn);
 		
-		ffaplayer.getPlayer().getEquipment().setArmorContents(null);
-		ffaplayer.getPlayer().getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-		
-		ffaplayer.getPlayer().getInventory().clear();
-		ffaplayer.getPlayer().getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
-		
-		ffaplayer.getPlayer().teleport(spawn);
-		
-		Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&aEntraste a " + this.name);
+		Messages.sendPlayerMessage(player, "&aEntraste a " + this.name);
 	}
 	
-	public void removePlayer(FFAPlayer ffaplayer) {
-		if(this.playerList.contains(ffaplayer)) {
-			Player player = ffaplayer.getPlayer();
-			StoredElements stored = ffaplayer.getStored();
-			
-			player.getEquipment().clear();
-			player.getEquipment().setArmorContents(stored.getStoredArmor());
-			
-			player.getInventory().clear();
-			player.getInventory().setContents(stored.getStoredInventory());
-			
-			player.setGameMode(stored.getGamemode());
-			player.setExp(stored.getStoredExp());
-			player.setLevel(stored.getStoredLevel());
-			player.setHealth(stored.getStoredHealth());
-			player.setMaxHealth(stored.getStoredMaxHealth());
-			player.setFoodLevel(stored.getStoredHunger());
-			player.setFlying(ffaplayer.isFlying());
-			
-			player.teleport(ffaplayer.getPreviousLocation());
-			this.playerList.remove(ffaplayer);
-		} else {
-			Messages.sendPlayerMessage(ffaplayer.getPlayer(), "&cNo estas en una arena!");
+	public void removePlayer(Player player) {
+		FFAPlayer fp = getFFAPlayer(player.getName());
+		
+		playerList.remove(fp);
+		this.currentPlayers--;
+		fp.removePlayer();
+	}
+	
+	public void removePlayers() {
+		for(FFAPlayer fp : this.playerList) {
+			fp.removePlayer();
+			playerList.remove(fp);
 		}
 	}
 	

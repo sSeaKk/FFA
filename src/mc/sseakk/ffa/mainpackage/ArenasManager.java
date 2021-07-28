@@ -73,6 +73,11 @@ public class ArenasManager {
 	
 	public void saveArenas() {
 		for(Arena arena : this.gameArenas) {
+			
+			if(!arena.getPlayerList().isEmpty()) {
+				arena.removePlayers();
+			}
+			
 			fm.createFile("\\arenas", arena.getName());
 			
 			BufferedWriter writer = fm.getBufferedWriter();
