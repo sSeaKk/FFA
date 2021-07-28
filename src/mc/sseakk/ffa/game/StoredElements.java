@@ -5,16 +5,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class StoredElements {
 	
-	private ItemStack[] storedInventory, storedEquipment;
+	private ItemStack[] storedInventory, storedArmor;
 	private GameMode gamemode;
 	private float storedExp;
 	private int storedLevel, storedHunger;
 	private double storedHealth, storedMaxHealth;
 	
-	public StoredElements(ItemStack[] storedInventory, ItemStack[] storedEquipment, GameMode gamemode, float storedExp,
+	public StoredElements(ItemStack[] storedInventory, ItemStack[] storedArmor, GameMode gamemode, float storedExp,
 			int storedLevel, int storedHunger, double storedHealth, double storedMaxHealth) {
 		this.storedInventory = storedInventory;
-		this.storedEquipment = storedEquipment;
+		this.storedArmor = storedArmor;
 		this.gamemode = gamemode;
 		this.storedExp = storedExp;
 		this.storedLevel = storedLevel;
@@ -31,12 +31,12 @@ public class StoredElements {
 		this.storedInventory = storedInventory;
 	}
 
-	public ItemStack[] getStoredEquipment() {
-		return storedEquipment;
+	public ItemStack[] getStoredArmor() {
+		return storedArmor;
 	}
 
-	public void setStoredEquipment(ItemStack[] storedEquipment) {
-		this.storedEquipment = storedEquipment;
+	public void setStoredArmort(ItemStack[] storedEquipment) {
+		this.storedArmor = storedEquipment;
 	}
 
 	public GameMode getGamemode() {

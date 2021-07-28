@@ -37,11 +37,11 @@ public class FFACommand implements CommandExecutor{
 						if(am.getArena(name) == null) {
 							Arena arena = new Arena(name, player);
 							am.addArena(arena);
-							Messages.sendPlayerMessage(player, "&aArena created");
+							Messages.sendPlayerMessage(player, "&aArena creada");
 							return true;
 						}
 						
-						Messages.sendPlayerMessage(player, "&cThat arena already exist!");
+						Messages.sendPlayerMessage(player, "&cEsa arena ya existe!");
 						return true;
 					}
 				}
@@ -51,11 +51,11 @@ public class FFACommand implements CommandExecutor{
 						String name = args[1];
 						if(am.getArena(name) != null) {
 							am.removeArena(name);
-							Messages.sendPlayerMessage(player, "&aArena deleted");
+							Messages.sendPlayerMessage(player, "&aArena borrada");
 							return true;
 						}
 						
-						Messages.sendPlayerMessage(player, "&cThat arena doesn't exist!");
+						Messages.sendPlayerMessage(player, "&cEsa arena no existe!");
 						return true;
 					}
 				}
@@ -65,9 +65,9 @@ public class FFACommand implements CommandExecutor{
 						String name = args[1];
 						Arena arena = am.getArena(name);
 						if(arena != null) {
-							if(arena.getSpawn() != null) {
+							if(arena.getSpawn() == null) {
 								arena.setSpawn(player.getLocation().clone());
-								Messages.sendPlayerMessage(player, "&aSpawn setted");
+								Messages.sendPlayerMessage(player, "&aSpawn determinado");
 								return true;
 							}
 							
@@ -75,7 +75,7 @@ public class FFACommand implements CommandExecutor{
 							return true;
 						}
 						
-						Messages.sendPlayerMessage(player, "&cThat arena doesn't exist!");
+						Messages.sendPlayerMessage(player, "&cEsa arena no existe!");
 						return true;
 					}
 				}
@@ -152,8 +152,7 @@ public class FFACommand implements CommandExecutor{
 			}
 		}
 		
-		
-		Messages.sendPlayerMessage(player, "&aUser Commands: \n"
+		Messages.sendPlayerMessage(player, "&aComandos de usuario: \n"
 				+ "&6/ffa join <arena> \n"
 				+ "&6/ffa leave");
 		return true;

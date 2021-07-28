@@ -1,6 +1,7 @@
 package mc.sseakk.ffa.listeners;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.FFAPlayer;
@@ -50,9 +54,13 @@ public class GeneralListener implements Listener{
 				Messages.broadcastMessage("&c" + ffaPlayerKilled.getPlayer().getName() + " &6fue asesinado por &c" + ffaPlayerKiller.getPlayer().getName());
 				
 				ffaPlayerKilled.increaseDeaths();
+				event.getDrops().clear();
+				event.setDroppedExp(0);
 				Messages.sendPlayerMessage(playerKilled, "&6+1 Muerte");
 				
 				ffaPlayerKiller.increaseKills();
+				if(playerKiller.hasPotionEffect(PotionEffectType.REGENERATION)) { playerKiller.removePotionEffect(PotionEffectType.REGENERATION); }
+				playerKiller.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 2));
 				Messages.sendPlayerMessage(playerKiller, "&6+1 Asesinatos");
 			}
 		}
@@ -65,8 +73,9 @@ public class GeneralListener implements Listener{
 		Location spawnpoint = event.getRespawnLocation();
 		
 		if(arena != null) {
-			Messages.sendPlayerMessage(player, "tepeado");
 			event.setRespawnLocation(arena.getSpawn());
+			player.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
+			player.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
 		} else {
 			event.setRespawnLocation(spawnpoint);
 		}

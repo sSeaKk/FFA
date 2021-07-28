@@ -1,5 +1,6 @@
 package mc.sseakk.ffa.game;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public class FFAPlayer {
@@ -7,8 +8,11 @@ public class FFAPlayer {
 	private Player player;
 	private int kills, deaths, killStreak;
 	private StoredElements stored;
+	private Location previousLocation;
+	private boolean flying;
 	
 	public FFAPlayer(Player player) {
+		
 		this.player = player;
 		this.stored = new StoredElements(
 				player.getInventory().getContents(),
@@ -20,6 +24,9 @@ public class FFAPlayer {
 				player.getHealth(),
 				player.getMaxHealth()
 				);
+		this.previousLocation = player.getLocation();
+		this.flying = player.isFlying();
+		
 		this.kills = 0;
 		this.deaths = 0;
 		this.killStreak = 0;
@@ -51,5 +58,13 @@ public class FFAPlayer {
 
 	public int getKillStreak() {
 		return killStreak;
+	}
+	
+	public Location getPreviousLocation() {
+		return previousLocation;
+	}
+
+	public boolean isFlying() {
+		return flying;
 	}
 }

@@ -4,7 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import mc.sseakk.ffa.util.Messages;
 
-public class FFA extends JavaPlugin{
+public class FFA extends JavaPlugin {
 	private static FFA instance;
 	private static FileManager fm;
 	private static CommandManager cm;
@@ -12,7 +12,7 @@ public class FFA extends JavaPlugin{
 	private static EventsManager em;
 	
 	public void onEnable() {
-		Messages.sendConsoleMessage("Initializing plugin");
+		Messages.sendConsoleMessage("Incializando plugin");
 		instance = this;
 		fm = new FileManager();
 		
@@ -21,12 +21,12 @@ public class FFA extends JavaPlugin{
 		
 		em = new EventsManager();
 		cm = new CommandManager();
-		Messages.sendConsoleMessage("Plugin initialized");
+		Messages.sendConsoleMessage("Plugin inicializado");
 	}
 	
 	public void onDisable() {
 		am.saveArenas();
-		Messages.sendConsoleMessage("Disabling plugin");
+		Messages.sendConsoleMessage("Deshabilitando plugin");
 	}
 	
 	public static FFA getInstance() {
