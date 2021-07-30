@@ -16,7 +16,7 @@ public class Kits {
 	private static EntityEquipment armadura;
 	private static Kits defaultKit;
 	
-	private Kits(Player player) { 
+	private Kits(Player player) {
 		setKitName("default");
 		inventario = player.getInventory();
 		armadura = player.getEquipment();
@@ -30,12 +30,13 @@ public class Kits {
 		armadura.setChestplate(item);
 		
 		item = new ItemStack(Material.DIAMOND_LEGGINGS);
-		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 		armadura.setLeggings(item);
 		
 		item = new ItemStack(Material.DIAMOND_BOOTS);
-		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
+		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
 		armadura.setBoots(item);
+		
 		
 		
 		item = new ItemStack(Material.DIAMOND_SWORD);

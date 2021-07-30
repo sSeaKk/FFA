@@ -72,6 +72,7 @@ public class ArenasManager {
 	}
 	
 	public void saveArenas() {
+		Messages.sendConsoleMessage("Guardando arenas");
 		for(Arena arena : this.gameArenas) {
 			
 			if(!arena.getPlayerList().isEmpty()) {

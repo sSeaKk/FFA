@@ -30,7 +30,6 @@ public class FileManager {
 	private BufferedWriter bufferedWriter = null;
 	private Scanner scanner = null;
 	
-	
 	public FileManager() {
 		this.plugin = FFA.getInstance();
 		registerConfig();
@@ -39,7 +38,7 @@ public class FileManager {
 	
 	public void registerConfig() {
 		File config = new File(this.plugin.getDataFolder(), "config.yml");
-		rutaConfig = config.getPath();
+		this.rutaConfig = config.getPath();
 		if(!config.exists()) {
 			this.plugin.getConfig().options().copyDefaults(true);
 			this.plugin.saveConfig();

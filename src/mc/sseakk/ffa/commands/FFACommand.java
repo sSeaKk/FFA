@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
-import mc.sseakk.ffa.game.FFAPlayer;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -114,7 +113,7 @@ public class FFACommand implements CommandExecutor{
 		
 		if(args.length > 0) {
 			if(args[0].equalsIgnoreCase("join")) {
-				if(args.length > 1 ){
+				if(args.length > 1 ) {
 					String name = args[1];
 					Arena arena = am.getArena(name);
 					if(arena != null) {

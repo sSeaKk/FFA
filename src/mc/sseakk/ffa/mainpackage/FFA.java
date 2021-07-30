@@ -10,6 +10,7 @@ public class FFA extends JavaPlugin {
 	private static CommandManager cm;
 	private static ArenasManager am;
 	private static EventsManager em;
+	private static StatsManager sm;
 	
 	public void onEnable() {
 		Messages.sendConsoleMessage("Incializando plugin");
@@ -19,12 +20,14 @@ public class FFA extends JavaPlugin {
 		am = new ArenasManager();
 		am.loadArenas();
 		
+		sm = new StatsManager();
 		em = new EventsManager();
 		cm = new CommandManager();
 		Messages.sendConsoleMessage("Plugin inicializado");
 	}
 	
 	public void onDisable() {
+		sm.saveStats();
 		am.saveArenas();
 		Messages.sendConsoleMessage("Deshabilitando plugin");
 	}
@@ -47,5 +50,9 @@ public class FFA extends JavaPlugin {
 	
 	public static EventsManager getEventsManager() {
 		return em;
+	}
+
+	public static StatsManager getStatsManager() {
+		return sm;
 	}
 }

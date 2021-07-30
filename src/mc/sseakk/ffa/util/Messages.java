@@ -11,11 +11,11 @@ public class Messages {
 	}
 	
 	public static void sendPlayerMessage(Player player, String message) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "[FFA] "+message));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6[FFA] &r"+message));
 	}
 	
 	public static void broadcastMessage(String message) {
-		Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "[FFA] " + message));
+		Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6[FFA] &r" + message));
 	}
 	
 	public static void warningMessage(String message) {

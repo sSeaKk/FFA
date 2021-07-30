@@ -1,7 +1,7 @@
 package mc.sseakk.ffa.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,13 +9,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.FFAPlayer;
+import mc.sseakk.ffa.game.Kits;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -47,7 +48,7 @@ public class GeneralListener implements Listener{
 			Player playerKilled = (Player) event.getEntity(),
 				   playerKiller = event.getEntity().getKiller();
 			
-			if(am.getPlayerArena(playerKilled.getName()).equals(am.getPlayerArena(playerKiller.getName()))) {
+			if(am.getPlayerArena(playerKilled.getName()) != null) {
 				FFAPlayer ffaPlayerKilled = am.getPlayerArena(playerKilled.getName()).getFFAPlayer(playerKilled.getName()),
 						  ffaPlayerKiller = am.getPlayerArena(playerKiller.getName()).getFFAPlayer(playerKiller.getName());
 				
@@ -64,6 +65,18 @@ public class GeneralListener implements Listener{
 				Messages.sendPlayerMessage(playerKiller, "&6+1 Asesinatos");
 			}
 		}
+		
+		if(event.getEntityType().equals(EntityType.PLAYER)) {
+			Player player = (Player) event.getEntity();
+			
+			if(am.getPlayerArena(player.getName()) != null) {
+				FFAPlayer playerKilled = am.getPlayerArena(player.getName()).getFFAPlayer(player.getName());
+				Messages.sendPlayerMessage(playerKilled.getPlayer(), "&6+1 Muerte");
+				playerKilled.increaseDeaths();
+				event.getDrops().clear();
+				event.setDroppedExp(0);
+			}
+		}
 	}
 	
 	@EventHandler
@@ -74,10 +87,29 @@ public class GeneralListener implements Listener{
 		
 		if(arena != null) {
 			event.setRespawnLocation(arena.getSpawn());
-			player.getEquipment().setChestplate(new ItemStack(Material.DIAMOND_CHESTPLATE));
-			player.getInventory().addItem(new ItemStack(Material.DIAMOND_SWORD));
+			
+			player.getInventory().clear();
+			player.getEquipment().clear();	
+			Kits.setDefaultKit(player);
+			
+			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+				public void run() {
+					player.addPotionEffect(FFAPlayer.getPotionEffect());
+				}
+			}, 1L);
+			
 		} else {
 			event.setRespawnLocation(spawnpoint);
+		}
+	}
+	
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = am.getPlayerArena(player.getName());
+		
+		if(arena != null) {
+			arena.removePlayer(player);
 		}
 	}
 }
