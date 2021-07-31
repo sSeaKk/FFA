@@ -20,10 +20,6 @@ public class FFAPlayer {
 	private Stats stats;
 	
 	public FFAPlayer(Player player) {
-		this.sm = FFA.getStatsManager();
-		this.stats = new Stats(this);
-		this.sm.addStats(stats);
-		
 		this.player = player;
 		this.stored = new StoredElements(
 				player.getInventory().getContents(),
@@ -49,6 +45,10 @@ public class FFAPlayer {
 		this.player.getInventory().clear();
 		this.player.getEquipment().clear();
 		Kits.setDefaultKit(player);
+		
+		this.sm = FFA.getStatsManager();
+		this.stats = new Stats(this);
+		this.sm.addStats(stats);
 	}
 	
 	public void removePlayer() {
@@ -69,56 +69,16 @@ public class FFAPlayer {
 		player.teleport(this.getPreviousLocation());
 	}
 	
+	public Stats getStats() {
+		return this.stats;
+	}
+	
 	public StoredElements getStored() {
 		return this.stored;
 	}
 	
 	public Player getPlayer() {
 		return this.player;
-	}
-
-	public int getKills() {
-		return this.stats.getKills();
-	}
-
-	public int getDeaths() {
-		return this.stats.getDeaths();
-	}
-
-	public int getAssists() {
-		return this.stats.getAssists();
-	}
-	
-	public int getKillStreak() {
-		return this.stats.getKillStreak();
-	}
-	
-	public int getDeathStreak() {
-		return this.stats.getDeathStreak();
-	}
-	
-	public int getMaxKillStreak() {
-		return this.stats.getMaxKillStreak();
-	}
-	
-	public int getMaxDeathStreak() {
-		return this.stats.getMaxDeathStreak();
-	}
-	
-	public int getDamageGiven() {
-		return this.stats.getDamageGiven();
-	}
-	
-	public int getDamageTaken() {
-		return this.stats.getDamageTaken();
-	}
-	
-	public int getMaxDamageGiven() {
-		return this.stats.getMaxDamageGiven();
-	}
-	
-	public int getMaxDamageTaken() {
-		return this.stats.getMaxDamageTaken();
 	}
 	
 	public Location getPreviousLocation() {
@@ -143,49 +103,5 @@ public class FFAPlayer {
 	
 	public void increaseDeaths() {
 		this.stats.increaseDeaths();
-	}
-	
-	public void setKills(int kills) {
-		this.stats.setKills(kills);
-	}
-
-	public void setDeaths(int deaths) {
-		 this.stats.setDeaths(deaths);
-	}
-
-	public void setAssists(int assists) {
-		this.stats.setAssists(assists);
-	}
-	
-	public void setKillStreak(int killStreak) {
-		this.stats.setKillStreak(killStreak);
-	}
-	
-	public void setDeathStreak(int deathStreak) {
-		this.stats.setDeathStreak(deathStreak);
-	}
-	
-	public void setMaxKillStreak(int maxKillStreak) {
-		this.stats.setMaxKillStreak(maxKillStreak);
-	}
-	
-	public void setMaxDeathStreak(int maxDeathStreak) {
-		this.stats.setMaxDeathStreak(maxDeathStreak);
-	}
-	
-	public void setDamageGiven(int damageGiven) {
-		this.stats.setDamageGiven(damageGiven);
-	}
-	
-	public void setDamageTaken(int damageTaken) {
-		this.stats.setDamageTaken(damageTaken);
-	}
-	
-	public void setMaxDamageGiven(int maxDamageGiven) {
-		this.stats.setMaxDamageGiven(maxDamageGiven);
-	}
-	
-	public void setMaxDamageTaken(int maxDamageTaken) {
-		this.stats.setMaxDamageTaken(maxDamageTaken);
 	}
 }

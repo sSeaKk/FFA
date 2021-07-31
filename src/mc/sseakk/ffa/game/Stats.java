@@ -17,6 +17,7 @@ public class Stats {
 	
 	public Stats(FFAPlayer fplayer) {
 		this.fplayer = fplayer;
+		this.name = fplayer.getPlayer().getName();
 		
 		this.kills = 0;
 		this.deaths = 0;

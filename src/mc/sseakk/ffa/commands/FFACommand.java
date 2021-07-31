@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
+import mc.sseakk.ffa.game.Stats;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -146,6 +147,22 @@ public class FFACommand implements CommandExecutor{
 				}
 				
 				Messages.sendPlayerMessage(player, "&cNo estas en una arena");
+				return true;
+			}
+		}
+		
+		if(args.length > 0) {
+			if(args[0].equalsIgnoreCase("stats")) {
+				if(am.getPlayerArena(player.getName()) == null) {
+					Messages.sendPlayerMessage(player, "&cNo estas en una arena!");
+					return true;
+				}
+				
+				Stats stats = am.getPlayerArena(player.getName()).getFFAPlayer(player.getName()).getStats();
+				Messages.sendPlayerMessage(player, "&6Estadisticas:"
+												 + "\nAsesinatos: " + stats.getKills()
+												 + "\nMuertes: " + stats.getDeaths()
+												 + "\nAsistencias: " + stats.getAssists());
 				return true;
 			}
 		}

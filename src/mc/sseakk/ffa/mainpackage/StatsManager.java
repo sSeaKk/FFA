@@ -9,7 +9,6 @@ import java.util.Scanner;
 
 import org.bukkit.entity.Player;
 
-import mc.sseakk.ffa.game.FFAPlayer;
 import mc.sseakk.ffa.game.Stats;
 import mc.sseakk.ffa.util.Messages;
 
@@ -24,6 +23,7 @@ public class StatsManager {
 	
 	public void addStats(Stats stats) {
 		this.gameStats.add(stats);
+		loadPlayerStats(stats);
 	}
 	
 	public void saveStats() {
@@ -35,16 +35,16 @@ public class StatsManager {
 			BufferedWriter writer = fm.getBufferedWriter();
 			
 			try {
-				writer.write("nombre="+player.getName());
+				writer.write("name="+player.getName());
 				writer.newLine();
 				
 				writer.write("kills="+stats.getKills());
 				writer.newLine();
 				
-				writer.write("muertes="+stats.getDeaths());
+				writer.write("deaths="+stats.getDeaths());
 				writer.newLine();
 				
-				writer.write("asistencias="+stats.getAssists());
+				writer.write("assists="+stats.getAssists());
 				writer.newLine();
 				
 				writer.write("maxKillStreak="+stats.getMaxKillStreak());
@@ -65,14 +65,19 @@ public class StatsManager {
 		}
 	}
 	
-	public Stats loadPlayerStats(FFAPlayer player) {
+	public void loadPlayerStats(Stats stats) {
 		File folder = fm.getFolder("\\stats");
+		
+		if(folder == null) {
+			fm.createFolder("\\stats");
+		}
+		
 		for(File file : folder.listFiles()) {
 			Scanner scn;
 			try {
 				scn = new Scanner(file);
-				if(scn.nextLine().replaceFirst("nombre=", "").equals(player.getPlayer().getName())) {
-					Stats stats = new Stats(player);
+				String name = scn.nextLine().replaceFirst("name=", "");
+				if(name.equals(stats.getName())) {
 					while(scn.hasNextLine()) {
 						String line = scn.nextLine(),
 							   value = null;
@@ -82,13 +87,13 @@ public class StatsManager {
 							stats.setKills(Integer.valueOf(value));
 						}
 						
-						if(line.startsWith("death")) {
-							value = line.replaceFirst("death=", "");
+						if(line.startsWith("deaths")) {
+							value = line.replaceFirst("deaths=", "");
 							stats.setDeaths(Integer.valueOf(value));
 						}
 						
-						if(line.startsWith("asistencias")) {
-							value = line.replaceFirst("asistencias=", "");
+						if(line.startsWith("assists")) {
+							value = line.replaceFirst("assists=", "");
 							stats.setAssists(Integer.valueOf(value));
 						}
 						
@@ -113,11 +118,7 @@ public class StatsManager {
 						}
 					}
 				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
-		
-		return null;
 	}
 }

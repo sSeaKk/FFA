@@ -92,6 +92,11 @@ public class FileManager {
 		return null;
 	}
 	
+	public void createFolder(String path) {
+		this.path = new File(plugin.getDataFolder().getPath() + path);
+		this.path.mkdirs();
+	}
+	
 	public void deleteFile(String path){
 		File fileToDelete = new File(plugin.getDataFolder().getPath() + path);
 		
