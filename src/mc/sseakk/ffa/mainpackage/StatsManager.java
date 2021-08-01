@@ -26,6 +26,16 @@ public class StatsManager {
 		loadPlayerStats(stats);
 	}
 	
+	public Stats getStats(String playerStats) {
+		for(Stats stats : this.gameStats){
+			if(stats.getName().equals(playerStats)) {
+				return stats;
+			}
+		}
+		
+		return null;
+	}
+	
 	public void saveStats() {
 		Messages.sendConsoleMessage("Guardando estadisticas");
 		for(Stats stats : this.gameStats) {

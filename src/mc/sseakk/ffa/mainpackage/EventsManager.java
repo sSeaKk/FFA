@@ -2,6 +2,7 @@ package mc.sseakk.ffa.mainpackage;
 
 import org.bukkit.plugin.PluginManager;
 
+import mc.sseakk.ffa.listeners.GameListener;
 import mc.sseakk.ffa.listeners.GeneralListener;
 
 public class EventsManager{
@@ -9,5 +10,6 @@ public class EventsManager{
 	
 	public EventsManager() {
 		pm.registerEvents(new GeneralListener(), FFA.getInstance());
+		pm.registerEvents(new GameListener(), FFA.getInstance());
 	}
 }

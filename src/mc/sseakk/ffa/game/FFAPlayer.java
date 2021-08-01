@@ -65,6 +65,7 @@ public class FFAPlayer {
 		this.player.setMaxHealth(this.stored.getStoredMaxHealth());
 		this.player.setFoodLevel(this.stored.getStoredHunger());
 		this.player.setFlying(this.isFlying());
+		this.player.removePotionEffect(potionEffect.getType());
 		
 		player.teleport(this.getPreviousLocation());
 	}
