@@ -83,6 +83,7 @@ public class GameListener implements Listener{
 				Stats statsPlayerDamaged = sm.getStats(playerDamaged.getName()),
 					  statsPlayerDamager = sm.getStats(playerDamager.getName());
 				
+				
 				Messages.sendPlayerMessage(playerDamager, "&6Atacaste a &c" + playerDamager.getName());
 				Messages.sendPlayerMessage(playerDamaged, "&6Te esta atacando &c" + playerDamaged.getName());
 			}
