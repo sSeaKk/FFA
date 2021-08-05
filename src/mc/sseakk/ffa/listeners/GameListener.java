@@ -77,12 +77,14 @@ public class GameListener implements Listener{
 		if(event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER) && event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
 			Player playerDamaged = (Player) event.getEntity(),
 				   playerDamager = (Player) event.getDamager();
+			
 			if(am.getPlayerArena(playerDamaged.getName()).equals(am.getPlayerArena(playerDamager.getName()))) {
 				Arena arena = am.getPlayerArena(playerDamaged.getName());
 				Stats statsPlayerDamaged = sm.getStats(playerDamaged.getName()),
 					  statsPlayerDamager = sm.getStats(playerDamager.getName());
 				
-				//Messages.sendPlayerMessage(playerDamager, "le pegaste a " + playerDamaged.getName());
+				Messages.sendPlayerMessage(playerDamager, "&6Atacaste a &c" + playerDamager.getName());
+				Messages.sendPlayerMessage(playerDamaged, "&6Te esta atacando &c" + playerDamaged.getName());
 			}
 		}
 	}

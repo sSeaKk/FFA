@@ -3,8 +3,7 @@ package mc.sseakk.ffa.game;
 public class Stats {
 	private FFAPlayer fplayer;
 	private int kills, 
-				deaths, 
-				assists, 
+				deaths,
 				killStreak, 
 				deathStreak, 
 				maxKillStreak, 
@@ -21,7 +20,6 @@ public class Stats {
 		
 		this.kills = 0;
 		this.deaths = 0;
-		this.assists = 0;
 		this.killStreak = 0;
 		this.deathStreak = 0;
 		this.maxKillStreak = 0;
@@ -46,14 +44,6 @@ public class Stats {
 
 	public void setDeaths(int death) {
 		this.deaths = death;
-	}
-
-	public int getAssists() {
-		return assists;
-	}
-
-	public void setAssists(int assists) {
-		this.assists = assists;
 	}
 
 	public int getKillStreak() {
@@ -136,10 +126,6 @@ public class Stats {
 		deaths++;
 	}
 	
-	public void increaseAssists() {
-		assists++;
-	}
-
 	public String getName() {
 		return name;
 	}

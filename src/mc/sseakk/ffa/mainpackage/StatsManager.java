@@ -54,9 +54,6 @@ public class StatsManager {
 				writer.write("deaths="+stats.getDeaths());
 				writer.newLine();
 				
-				writer.write("assists="+stats.getAssists());
-				writer.newLine();
-				
 				writer.write("maxKillStreak="+stats.getMaxKillStreak());
 				writer.newLine();
 				
@@ -100,11 +97,6 @@ public class StatsManager {
 						if(line.startsWith("deaths")) {
 							value = line.replaceFirst("deaths=", "");
 							stats.setDeaths(Integer.valueOf(value));
-						}
-						
-						if(line.startsWith("assists")) {
-							value = line.replaceFirst("assists=", "");
-							stats.setAssists(Integer.valueOf(value));
 						}
 						
 						if(line.startsWith("maxKillStreak")) {
