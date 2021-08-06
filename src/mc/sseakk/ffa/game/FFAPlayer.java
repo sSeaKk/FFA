@@ -97,12 +97,4 @@ public class FFAPlayer {
 	public static void setPotionEffect(PotionEffect effect) {
 		potionEffect = effect;
 	}
-	
-	public void increaseKills() {
-		this.stats.increaseKills();
-	}
-	
-	public void increaseDeaths() {
-		this.stats.increaseDeaths();
-	}
 }

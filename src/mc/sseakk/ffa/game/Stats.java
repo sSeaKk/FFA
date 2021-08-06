@@ -4,6 +4,7 @@ public class Stats {
 	private FFAPlayer fplayer;
 	private int kills, 
 				deaths,
+				assists,
 				killStreak, 
 				deathStreak, 
 				maxKillStreak, 
@@ -20,6 +21,7 @@ public class Stats {
 		
 		this.kills = 0;
 		this.deaths = 0;
+		this.assists = 0;
 		this.killStreak = 0;
 		this.deathStreak = 0;
 		this.maxKillStreak = 0;
@@ -132,5 +134,13 @@ public class Stats {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getAssists() {
+		return assists;
+	}
+
+	public void setAssists(int assists) {
+		this.assists = assists;
 	}
 }

@@ -161,7 +161,8 @@ public class FFACommand implements CommandExecutor{
 				Stats stats = am.getPlayerArena(player.getName()).getFFAPlayer(player.getName()).getStats();
 				Messages.sendPlayerMessage(player, "&6Estadisticas:"
 												 + "\nAsesinatos: " + stats.getKills()
-												 + "\nMuertes: " + stats.getDeaths());
+												 + "\nMuertes: " + stats.getDeaths()
+												 + "\nAsistencias: " + stats.getAssists());
 				return true;
 			}
 		}

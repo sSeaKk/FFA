@@ -62,7 +62,8 @@ public class Arena {
 	}
 	
 	public void removePlayers() {
-		for(FFAPlayer fp : this.playerList) {
+		while(!playerList.isEmpty()) {
+			FFAPlayer fp = playerList.get(0);
 			fp.removePlayer();
 			playerList.remove(fp);
 		}

@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
@@ -68,6 +69,16 @@ public class GeneralListener implements Listener{
 		
 		if(arena != null) {
 			arena.removePlayer(player);
+		}
+	}
+	
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = am.getPlayerArena(player.getName());
+		
+		if(arena != null) {
+			event.setCancelled(true);
 		}
 	}
 }
