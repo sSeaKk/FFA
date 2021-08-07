@@ -128,6 +128,10 @@ public class Stats {
 		deaths++;
 	}
 	
+	public void increaseAssists() {
+		assists++;
+	}
+	
 	public String getName() {
 		return name;
 	}

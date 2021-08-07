@@ -3,8 +3,8 @@ package mc.sseakk.ffa.listeners;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -30,7 +30,7 @@ import mc.sseakk.ffa.util.TimeUtil;
 public class GameListener implements Listener{
 	private ArenasManager am = FFA.getArenasManager();
 	private StatsManager sm = FFA.getStatsManager();
-	
+			
 	private Map<Player, DamageCause> lastDamage = new HashMap<Player, DamageCause>();
 	
 	private ArrayList<Player> enderPearlThrowers = new ArrayList<Player>();
@@ -39,50 +39,123 @@ public class GameListener implements Listener{
 	private Map<Player, Player> lastDamager = new HashMap<Player, Player>();
 	private Map<Player, Long> lastDamagerCooldown = new HashMap<Player, Long>();
 	
-	private Map<Player, Player> assister = new HashMap<Player, Player>();
-	private Map<Player, Long> assisterCooldown = new HashMap<Player, Long>();
+	private Map<Player, Assister> assisterMap = new HashMap<Player, Assister>();
+	private Map<Assister, Long> assisterCooldown = new HashMap<Assister, Long>();
 	
-	private Map<Entry<Player, Player>, Double> damagePerPlayer = new HashMap<Entry<Player, Player>, Double>();
+	
+	//Assister Class
+	private static class Assister{
+		private Player player;
+		private double damageGiven;
+		private static ArrayList<Assister> posibleAssistersList = new ArrayList<Assister>();
+		
+		private Assister(Player player) {
+			this.player = player;
+			this.damageGiven = 0;
+			posibleAssistersList.add(this);
+		}
+		
+		private void increaseDamageGiven(double damage) {
+			this.damageGiven += damage;
+		}
+		
+		private String getName() {
+			return player.getName();
+		}
+		
+		private double getDamage() {
+			return damageGiven;
+		}
+		
+		private static Assister getPosibleAssister(Player player) {
+			for(Assister a : posibleAssistersList) {
+				if(a.getName().equals(player.getName())) {
+					return a;
+				}
+			}
+			
+			return null;
+		}
+		
+		private static void removePosibleAssister(Player player) {
+			if(getPosibleAssister(player) != null) {
+				posibleAssistersList.remove(getPosibleAssister(player));
+			}
+		}
+		
+		private Player getPlayer() {
+			return this.player;
+		}
+	}
+	
+	
 	
 	@EventHandler
 	public void onKillDeath(EntityDeathEvent event) {
 		if(event.getEntityType().equals(EntityType.PLAYER) && event.getEntity().getKiller() != null) {
 			Player playerKilled = (Player) event.getEntity(),
-				   playerKiller = event.getEntity().getKiller();
+				   playerKiller = event.getEntity().getKiller(),
+				   playerAssister = assisterMap.get(playerKilled).getPlayer();
 			
 			if(am.getPlayerArena(playerKilled.getName()) != null) {
 				FFAPlayer ffaPlayerKilled = am.getPlayerArena(playerKilled.getName()).getFFAPlayer(playerKilled.getName()),
 						  ffaPlayerKiller = am.getPlayerArena(playerKiller.getName()).getFFAPlayer(playerKiller.getName());
 				
 				Stats statsPlayerKilled = sm.getStats(playerKilled.getName()),
-					  statsPlayerKiller = sm.getStats(playerKiller.getName());
+					  statsPlayerKiller = sm.getStats(playerKiller.getName()),
+					  statsPlayerAssister = sm.getStats(playerAssister.getName());
 				
-				for(FFAPlayer ffaplayer : am.getPlayerArena(playerKilled.getName()).getPlayerList()) {
-					Player player = ffaplayer.getPlayer();
-					if(ffaplayer != ffaPlayerKiller && ffaplayer != ffaPlayerKilled) {
-						Messages.sendPlayerMessage(player, "&c" + ffaPlayerKilled.getPlayer().getName() + " &6fue asesinado por &c" + ffaPlayerKiller.getPlayer().getName());
-					}
-				}
+				Assister assister = assisterMap.get(playerKilled);
+				
+				String killedMessage = "&6Has sido asesinado por &c" + playerKiller.getName() +"&6 [&c+1 &6Muerte]",
+					   killerMessage = "&6Has asesinado a &c" + playerKilled.getName() +"&6 [&a+1 &6Asesinatos]",
+					   globalMessage = "&c" + ffaPlayerKilled.getPlayer().getName() + " &6fue asesinado por &c" + ffaPlayerKiller.getPlayer().getName();
 				
 				if(lastDamage.get(playerKilled) == DamageCause.ENTITY_ATTACK) {
+					//Player Assist
+					if(playerKiller != playerAssister) {
+						if(assisterCooldown.get(assister) > TimeUtil.currentTime()) {
+							killedMessage = "&6Has sido asesinado por &c" + playerKiller.getName() + " &6con la ayuda de &c"+ playerAssister.getName() +"&6 [&c+1 &6Muerte]";
+							killerMessage = "&6Has asesinado a &c" + playerKilled.getName() + " &6con la ayuda de &c"+ playerAssister.getName() +"&6 [&a+1 &6Asesinatos]";
+							globalMessage = "&c" + playerKilled.getName() + " &6fue asesinado por &c" + playerKiller.getName() + " &6con la ayuda de &c" + playerAssister.getName();
+							
+							statsPlayerAssister.increaseAssists();
+							Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+
+								@Override
+								public void run() {
+									Messages.sendPlayerMessage(playerAssister, "&b+1 &6Asistencia");
+								}
+								
+							}, 1L);
+							
+						}
+					}
+					
 					//Player Killed
 					statsPlayerKilled.increaseDeaths();
 					event.getDrops().clear();
 					event.setDroppedExp(0);
-					Messages.sendPlayerMessage(playerKilled, "&6Has sido asesinado por &c" + playerKiller.getName() +"&6 [+1 Muerte]");
+					Messages.sendPlayerMessage(playerKilled, killedMessage);
 					
 					//Player Killer
 					statsPlayerKiller.increaseKills();
 					if(playerKiller.hasPotionEffect(PotionEffectType.REGENERATION)) { playerKiller.removePotionEffect(PotionEffectType.REGENERATION); }
 					playerKiller.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 2));
-					Messages.sendPlayerMessage(playerKiller, "&6Has asesinado a &c" + playerKiller.getName() +"&6 [+1 Asesinatos]");
-					return;
+					Messages.sendPlayerMessage(playerKiller, killerMessage);
+					
+					for(FFAPlayer ffaplayer : am.getPlayerArena(playerKilled.getName()).getPlayerList()) {
+						Player player = ffaplayer.getPlayer();
+						if(ffaplayer != ffaPlayerKiller && ffaplayer != ffaPlayerKilled) {
+							Messages.sendPlayerMessage(player, globalMessage);
+						}
+					}
 				}
-				
 			}
 		}
 		
 		if(event.getEntityType().equals(EntityType.PLAYER) && am.getPlayerArena(((Player) event.getEntity()).getName()) != null) {
+
 			Player player = (Player) event.getEntity();
 			Player lastDamagerPlayer = null;
 			Stats stats = sm.getStats(player.getName());
@@ -149,8 +222,6 @@ public class GameListener implements Listener{
 				   playerDamager = (Player) event.getDamager();
 			
 			if(am.getPlayerArena(playerDamaged.getName()).equals(am.getPlayerArena(playerDamager.getName()))) {
-				Messages.sendPlayerMessage(playerDamager, "&6Atacaste a &c" + playerDamaged.getName());
-				Messages.sendPlayerMessage(playerDamaged, "&6Te esta atacando &c" + playerDamager.getName());
 				
 				if(lastDamagerCooldown.containsKey(playerDamaged)) {
 					lastDamagerCooldown.remove(playerDamaged);
@@ -167,10 +238,48 @@ public class GameListener implements Listener{
 				}
 				
 				//Assister setup
-				if(!assister.containsKey(playerDamager)) {
-					if(event.getFinalDamage() >= 8) {
-						
+				if(!assisterMap.containsKey(playerDamaged)) {
+					Assister assister;
+					
+					if(Assister.getPosibleAssister(playerDamager) != null) {	
+						assister = Assister.getPosibleAssister(playerDamager);
+					} else {
+						assister = new Assister(playerDamager);
 					}
+					
+					if(!(assister.getDamage() > 10.5)) {
+						assister.increaseDamageGiven(event.getFinalDamage());
+						return;
+					}
+					
+					
+					assisterMap.put(playerDamaged, assister);
+					assisterCooldown.put(assister, TimeUtil.assistrerCooldown());
+					Assister.removePosibleAssister(playerDamager);
+				} else {
+					Assister assister = assisterMap.get(playerDamaged);
+					
+					if(assister.getName() != playerDamager.getName()) {
+						assister = Assister.getPosibleAssister(playerDamager);
+						
+						if(assister == null) {
+							assister = new Assister(playerDamager);
+						}
+						
+						if(!(assister.getDamage() > 10.5)) {
+							assister.increaseDamageGiven(event.getFinalDamage());
+							return;
+						}
+						assisterMap.remove(playerDamaged);
+						
+						Assister.removePosibleAssister(playerDamager);
+						assisterMap.put(playerDamaged, assister);
+						assisterCooldown.put(assister, TimeUtil.assistrerCooldown());
+						return;
+					}
+					
+					assisterCooldown.remove(assister);
+					assisterCooldown.put(assister, TimeUtil.assistrerCooldown());
 				}
 			}
 		}

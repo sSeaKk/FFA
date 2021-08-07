@@ -6,7 +6,11 @@ public class TimeUtil {
 	}
 	
 	public static Long enderPearlDeathCooldown() {
-		return System.currentTimeMillis() + 1000;
+		return System.currentTimeMillis() + 2500;
+	}
+	
+	public static Long assistrerCooldown() {
+		return System.currentTimeMillis() + 5000;
 	}
 	
 	public static Long currentTime() {
