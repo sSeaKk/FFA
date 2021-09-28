@@ -13,6 +13,7 @@ import org.bukkit.World;
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
 import mc.sseakk.ffa.game.FFAPlayer;
+import mc.sseakk.ffa.game.StatsScoreboard;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;
@@ -22,6 +23,7 @@ public class ArenasManager {
 	public ArenasManager() {
 		this.gameArenas = new ArrayList<Arena>();
 		this.fm = FFA.getFileManager();
+		loadArenas();
 	}
 	
 	public void addArena(Arena arena) {

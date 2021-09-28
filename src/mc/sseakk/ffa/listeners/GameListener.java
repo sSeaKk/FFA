@@ -210,7 +210,6 @@ public class GameListener implements Listener{
 					event.setDroppedExp(0);
 					return;
 				}
-				
 			}
 		}
 	}

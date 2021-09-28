@@ -126,6 +126,8 @@ public class StatsManager {
 							stats.setMaxDamageTaken(Integer.valueOf(value));
 						}
 					}
+					
+					stats.calculateRatios();
 				}
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}

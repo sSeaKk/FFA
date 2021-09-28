@@ -26,12 +26,14 @@ public class Arena {
 		this.currentPlayers = 0;
 		this.setHasFile(false);
 		this.spawn = null;
+		StatsScoreboard.initScoreboard(this);
 	}
 	
 	public Arena() {
 		this.playerList = new ArrayList<FFAPlayer>();
 		this.status = ArenaStatus.DISABLED;
 		this.currentPlayers = 0;
+		StatsScoreboard.initScoreboard(this);
 	}
 	
 	public void addPlayer(Player player) {

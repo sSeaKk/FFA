@@ -13,6 +13,8 @@ public class Stats {
 				damageTaken,
 				maxDamageGiven,
 				maxDamageTaken;
+	private double kdaRatio,
+				   kdRatio;
 	private String name;
 	
 	public Stats(FFAPlayer fplayer) {
@@ -31,7 +33,7 @@ public class Stats {
 		this.maxDamageGiven = 0;
 		this.maxDamageTaken = 0;
 	}
-
+	
 	public int getKills() {
 		return kills;
 	}
@@ -120,18 +122,6 @@ public class Stats {
 		this.maxDamageTaken = maxDamageTaken;
 	}
 	
-	public void increaseKills() {
-		kills++;
-	}
-	
-	public void increaseDeaths() {
-		deaths++;
-	}
-	
-	public void increaseAssists() {
-		assists++;
-	}
-	
 	public String getName() {
 		return name;
 	}
@@ -146,5 +136,40 @@ public class Stats {
 
 	public void setAssists(int assists) {
 		this.assists = assists;
+	}
+	
+	public void calculateRatios() {
+		if(this.deaths == 0) {
+			this.kdaRatio = (double) Math.round(((double) kills + (assists / 2)) * 100d) / 100;
+			this.kdRatio = (double) Math.round(((double) kills) * 100d) /100;
+
+			return;
+		}
+		
+		this.kdaRatio = (double) Math.round(((double) (kills + (assists / 2)) / deaths) * 100d) / 100;
+		this.kdRatio = (double) Math.round(((double) kills / deaths) * 100d) / 100;
+	}
+	
+	public void increaseKills() {
+		kills++;
+		calculateRatios();
+	}
+	
+	public void increaseDeaths() {
+		deaths++;
+		calculateRatios();
+	}
+	
+	public void increaseAssists() {
+		assists++;
+		calculateRatios();
+	}
+	
+	public double getKdaRatio() {
+		return kdaRatio;
+	}
+	
+	public double getKdRatio() {
+		return kdRatio;
 	}
 }

@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.mainpackage.StatsManager;
@@ -18,6 +19,7 @@ public class FFAPlayer {
 	private static PotionEffect potionEffect;
 	private StatsManager sm;
 	private Stats stats;
+	private Scoreboard previousScoreboard;
 	
 	public FFAPlayer(Player player) {
 		this.player = player;
@@ -33,6 +35,8 @@ public class FFAPlayer {
 				);
 		
 		this.previousLocation = player.getLocation();
+		this.previousScoreboard = player.getScoreboard();
+		
 		this.flying = player.isFlying();
 		potionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
 		
@@ -49,6 +53,8 @@ public class FFAPlayer {
 		this.sm = FFA.getStatsManager();
 		this.stats = new Stats(this);
 		this.sm.addStats(stats);
+		
+		StatsScoreboard.updateStatsScoreboard(this);
 	}
 	
 	public void removePlayer() {
@@ -67,7 +73,8 @@ public class FFAPlayer {
 		this.player.setFlying(this.isFlying());
 		this.player.removePotionEffect(potionEffect.getType());
 		
-		player.teleport(this.getPreviousLocation());
+		this.player.setScoreboard(previousScoreboard);
+		this.player.teleport(this.previousLocation);
 	}
 	
 	public Stats getStats() {
@@ -80,10 +87,6 @@ public class FFAPlayer {
 	
 	public Player getPlayer() {
 		return this.player;
-	}
-	
-	public Location getPreviousLocation() {
-		return previousLocation;
 	}
 
 	public boolean isFlying() {

@@ -16,10 +16,7 @@ public class FFA extends JavaPlugin {
 		Messages.sendConsoleMessage("Incializando plugin");
 		instance = this;
 		fm = new FileManager();
-		
 		am = new ArenasManager();
-		am.loadArenas();
-		
 		sm = new StatsManager();
 		em = new EventsManager();
 		cm = new CommandManager();
