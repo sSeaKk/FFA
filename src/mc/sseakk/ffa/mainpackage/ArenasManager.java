@@ -13,7 +13,6 @@ import org.bukkit.World;
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.ArenaStatus;
 import mc.sseakk.ffa.game.FFAPlayer;
-import mc.sseakk.ffa.game.StatsScoreboard;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;
@@ -128,6 +127,11 @@ public class ArenasManager {
 	
 	public void loadArenas() {
 		File folder = fm.getFolder("\\arenas");
+		if(folder == null) {
+			fm.createFolder("\\arenas");
+			folder = fm.getFolder("\\arenas");
+		}
+		
 		File[] files = folder.listFiles();
 		boolean saveFiles = false;
 		

@@ -51,8 +51,12 @@ public class FFAPlayer {
 		Kits.setDefaultKit(player);
 		
 		this.sm = FFA.getStatsManager();
-		this.stats = new Stats(this);
-		this.sm.addStats(stats);
+		
+		this.stats = sm.getStats(player.getName());
+		if(this.stats == null) {
+			this.stats = new Stats(this);
+			this.sm.addStats(stats);
+		}
 		
 		StatsScoreboard.updateStatsScoreboard(this);
 	}

@@ -76,8 +76,14 @@ public class FFACommand implements CommandExecutor{
 												 + "\nAsesinatos: " + stats.getKills()
 												 + "\nMuertes: " + stats.getDeaths()
 												 + "\nAsistencias: " + stats.getAssists()
+												 + "\n"
 												 + "\nKDA: " + stats.getKdaRatio()
-												 + "\nKDR: " + stats.getKdRatio());	
+												 + "\nKDR: " + stats.getKdRatio()
+												 + "\n"
+												 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
+												 + "\nDeath Streak: " + stats.getDeathStreak()
+												 + "\nMax Death Streak: " + stats.getMaxDeathStreak());
+				
 				return true;
 			}
 		}

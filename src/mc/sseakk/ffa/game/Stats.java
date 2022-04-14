@@ -151,17 +151,33 @@ public class Stats {
 	}
 	
 	public void increaseKills() {
-		kills++;
+		this.kills++;
 		calculateRatios();
+		this.killStreak++;
+		
+		if(this.deathStreak > this.maxDeathStreak) {
+			this.maxDeathStreak = this.deathStreak;
+		}
+		
+		if(this.deathStreak != 0) {
+			this.deathStreak = 0;
+		}
 	}
 	
 	public void increaseDeaths() {
-		deaths++;
+		this.deaths++;
 		calculateRatios();
+		this.deathStreak++;
+		
+		if(this.killStreak > this.maxKillStreak) {
+			this.maxKillStreak = this.killStreak;
+		}
+		
+		this.killStreak = 0;
 	}
 	
 	public void increaseAssists() {
-		assists++;
+		this.assists++;
 		calculateRatios();
 	}
 	

@@ -95,7 +95,10 @@ public class GameListener implements Listener{
 		if(event.getEntityType().equals(EntityType.PLAYER) && event.getEntity().getKiller() != null) {
 			Player playerKilled = (Player) event.getEntity(),
 				   playerKiller = event.getEntity().getKiller(),
-				   playerAssister = assisterMap.get(playerKilled).getPlayer();
+				   playerAssister = null;
+				   try {
+					   playerAssister = assisterMap.get(playerKilled).getPlayer();
+				   } catch(NullPointerException e){}
 			
 			if(am.getPlayerArena(playerKilled.getName()) != null) {
 				FFAPlayer ffaPlayerKilled = am.getPlayerArena(playerKilled.getName()).getFFAPlayer(playerKilled.getName()),
@@ -121,10 +124,9 @@ public class GameListener implements Listener{
 							
 							statsPlayerAssister.increaseAssists();
 							Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
-
 								@Override
 								public void run() {
-									Messages.sendPlayerMessage(playerAssister, "&b+1 &6Asistencia");
+									Messages.sendPlayerMessage(assister.getPlayer(), "&b+1 &6Asistencia");
 								}
 								
 							}, 1L);

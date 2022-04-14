@@ -80,6 +80,7 @@ public class StatsManager {
 		
 		if(folder == null) {
 			fm.createFolder("\\stats");
+			folder = fm.getFolder("\\stats");
 		}
 		
 		for(File file : folder.listFiles()) {
