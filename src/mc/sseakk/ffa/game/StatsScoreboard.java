@@ -20,7 +20,7 @@ public class StatsScoreboard {
 	
 	
 	
-	public static void initScoreboard(Arena arena) {
+	public static void initScoreboard(Arena arena) { 
 		BukkitScheduler scheduler = FFA.getInstance().getServer().getScheduler();
 		taskID = scheduler.scheduleSyncRepeatingTask(FFA.getInstance(), new Runnable(){
 			@Override
