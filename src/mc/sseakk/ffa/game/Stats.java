@@ -1,7 +1,13 @@
 package mc.sseakk.ffa.game;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
+
 public class Stats {
 	private FFAPlayer fplayer;
+	private OfflinePlayer player;
 	private int kills, 
 				deaths,
 				assists,
@@ -15,11 +21,29 @@ public class Stats {
 				maxDamageTaken;
 	private double kdaRatio,
 				   kdRatio;
-	private String name;
+	private UUID uuid;
+	
+	public Stats(UUID uuid) {
+		this.fplayer = null;
+		this.uuid = uuid;
+		this.setPlayer(Bukkit.getOfflinePlayer(uuid));
+		
+		this.kills = 0;
+		this.deaths = 0;
+		this.assists = 0;
+		this.killStreak = 0;
+		this.deathStreak = 0;
+		this.maxKillStreak = 0;
+		this.maxDeathStreak = 0;
+		this.damageGiven = 0;
+		this.damageTaken = 0;
+		this.maxDamageGiven = 0;
+		this.maxDamageTaken = 0;
+	}
 	
 	public Stats(FFAPlayer fplayer) {
 		this.fplayer = fplayer;
-		this.name = fplayer.getPlayer().getName();
+		this.setPlayer(fplayer.getPlayer());
 		
 		this.kills = 0;
 		this.deaths = 0;
@@ -122,14 +146,6 @@ public class Stats {
 		this.maxDamageTaken = maxDamageTaken;
 	}
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public int getAssists() {
 		return assists;
 	}
@@ -187,5 +203,21 @@ public class Stats {
 	
 	public double getKdRatio() {
 		return kdRatio;
+	}
+
+	public UUID getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
+	}
+
+	public OfflinePlayer getPlayer() {
+		return player;
+	}
+
+	public void setPlayer(OfflinePlayer player) {
+		this.player = player;
 	}
 }

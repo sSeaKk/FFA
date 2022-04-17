@@ -43,7 +43,7 @@ public class StatsScoreboard {
 		obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 		
 		lines.add(Text.colorText(" "));
-		lines.add(Text.colorText(spacebars+"&6Ping: &7"+ ((CraftPlayer)player.getPlayer()).getHandle().ping));
+		lines.add(Text.colorText(spacebars+"&6Ping: &7"+ ((CraftPlayer)player.getPlayer()).getHandle().ping)+"ms");
 		lines.add(Text.colorText("  "));
 		lines.add(Text.colorText(spacebars+"&6Kills: &7" + stats.getKills()));
 		lines.add(Text.colorText(spacebars+"&6Deaths: &7" + stats.getDeaths()));

@@ -52,10 +52,13 @@ public class FFAPlayer {
 		
 		this.sm = FFA.getStatsManager();
 		
-		this.stats = sm.getStats(player.getName());
+		this.stats = sm.getStats(player.getUniqueId());
 		if(this.stats == null) {
+			System.out.println("null stats");
 			this.stats = new Stats(this);
 			this.sm.addStats(stats);
+		} else {
+			this.stats.setFplayer(this);
 		}
 		
 		StatsScoreboard.updateStatsScoreboard(this);

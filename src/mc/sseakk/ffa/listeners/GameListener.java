@@ -42,6 +42,7 @@ public class GameListener implements Listener{
 	private Map<Player, Assister> assisterMap = new HashMap<Player, Assister>();
 	private Map<Assister, Long> assisterCooldown = new HashMap<Assister, Long>();
 	
+	private Map<Player, Player> pvpMap = new HashMap<Player, Player>();
 	
 	//Assister Class
 	private static class Assister{
@@ -104,9 +105,9 @@ public class GameListener implements Listener{
 				FFAPlayer ffaPlayerKilled = am.getPlayerArena(playerKilled.getName()).getFFAPlayer(playerKilled.getName()),
 						  ffaPlayerKiller = am.getPlayerArena(playerKiller.getName()).getFFAPlayer(playerKiller.getName());
 				
-				Stats statsPlayerKilled = sm.getStats(playerKilled.getName()),
-					  statsPlayerKiller = sm.getStats(playerKiller.getName()),
-					  statsPlayerAssister = sm.getStats(playerAssister.getName());
+				Stats statsPlayerKilled = sm.getStats(playerKilled.getUniqueId()),
+					  statsPlayerKiller = sm.getStats(playerKiller.getUniqueId()),
+					  statsPlayerAssister = sm.getStats(playerAssister.getUniqueId());
 				
 				Assister assister = assisterMap.get(playerKilled);
 				
@@ -160,7 +161,7 @@ public class GameListener implements Listener{
 
 			Player player = (Player) event.getEntity();
 			Player lastDamagerPlayer = null;
-			Stats stats = sm.getStats(player.getName());
+			Stats stats = sm.getStats(player.getUniqueId());
 			ArrayList<FFAPlayer> playerList = am.getPlayerArena(player.getName()).getPlayerList();
 			
 			if(lastDamage.containsKey(player)) {
@@ -186,7 +187,7 @@ public class GameListener implements Listener{
 							if(enderPearlDeathCooldown.get(player) > TimeUtil.currentTime()) {
 								Messages.sendAllPlayerArenaMessage(playerList, enderPearlDeathMessage);
 								if(lastDamagerPlayer != null) {
-									Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getName());
+									Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 									Messages.sendPlayerMessage(lastDamagerPlayer, "&6+1 Asesinatos");
 									statsLastDamagerPlayer.increaseKills();
 								}
@@ -202,7 +203,7 @@ public class GameListener implements Listener{
 					
 					Messages.sendAllPlayerArenaMessage(playerList, fallDeathMessage);
 					if(lastDamagerPlayer != null) {
-						Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getName());
+						Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 						Messages.sendPlayerMessage(lastDamagerPlayer, "&6+1 Asesinatos");
 						statsLastDamagerPlayer.increaseKills();
 					}
