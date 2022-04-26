@@ -16,4 +16,8 @@ public class TimeUtil {
 	public static Long currentTime() {
 		return System.currentTimeMillis();
 	}
+	
+	public static Long lastDamagerCooldown_voidCause() {
+		return System.currentTimeMillis() + 15000;
+	}
 }

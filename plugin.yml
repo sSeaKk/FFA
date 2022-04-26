@@ -1,5 +1,5 @@
 name: FFA
-version: b0.1-b53
+version: b0.1-r
 main: mc.sseakk.ffa.mainpackage.FFA
 authors: [sSeaKk]
 description: FFA plugin

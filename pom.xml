@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>FFA</groupId>
   <artifactId>FFA</artifactId>
-  <version>vb0.1-b53</version>
+  <version>vb0.1-r</version>
   <name>FFA</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -34,8 +34,13 @@
     <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
-        
+    </repository>
+    
+    <repository>
+    	<id>sirblobman-public</id>
+    	<url>https://nexus.sirblobman.xyz/repository/public/</url>
+	</repository>
+       
   </repositories>
   
   <dependencies>
@@ -77,7 +82,14 @@
           <artifactId>placeholderapi</artifactId>
           <version>2.11.1</version>
          <scope>provided</scope>
-        </dependency>
+     </dependency>
+     
+     <dependency>
+    	<groupId>com.SirBlobman.combatlogx</groupId>
+    	<artifactId>CombatLogX-API</artifactId>
+    	<version>10.0.0.0-SNAPSHOT</version>
+    	<scope>provided</scope>
+	</dependency>
     
   </dependencies>
   

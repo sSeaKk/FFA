@@ -10,7 +10,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.mainpackage.StatsManager;
 
-public class FFAPlayer {
+public class FFAPlayer{
 	
 	private Player player;
 	private StoredElements stored;

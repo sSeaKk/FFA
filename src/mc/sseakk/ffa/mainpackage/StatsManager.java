@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import mc.sseakk.ffa.game.Stats;
@@ -21,7 +20,7 @@ public class StatsManager {
 	public StatsManager(){
 		this.fm = FFA.getFileManager();
 		this.gameStats = new ArrayList<Stats>();
-		loadPlayersStats();
+		loadAllStats();
 	}
 	
 	public void addStats(Stats stats) {
@@ -38,7 +37,7 @@ public class StatsManager {
 		return null;
 	}
 	
-	public void saveStats() {
+	public void saveAllStats() {
 		Messages.sendConsoleMessage("Guardando estadisticas");
 		for(Stats stats : this.gameStats) {
 			OfflinePlayer player = stats.getPlayer();
@@ -77,7 +76,51 @@ public class StatsManager {
 		}
 	}
 	
-	public void loadPlayersStats() {
+	/*public void saveStats(UUID uuid) {
+		Stats stats = null;
+		for(Stats statsFromList : gameStats) {
+			if(stats.getPlayer().getUniqueId().equals(uuid)) {
+				stats = statsFromList;
+			}
+		}
+		
+		Messages.sendConsoleMessage("Guardando estadisticas");
+		OfflinePlayer player = stats.getPlayer();
+		fm.createFile("\\stats", player.getUniqueId().toString());
+			
+			BufferedWriter writer = fm.getBufferedWriter();
+			
+		try {
+			writer.write("name="+player.getName());
+			writer.newLine();
+			
+			writer.write("kills="+stats.getKills());
+			writer.newLine();
+			
+			writer.write("deaths="+stats.getDeaths());
+			writer.newLine();
+			
+			writer.write("assists="+stats.getAssists());
+			writer.newLine();
+				
+			writer.write("maxKillStreak="+stats.getMaxKillStreak());
+			writer.newLine();
+				
+			writer.write("maxDeathStreak="+stats.getMaxDeathStreak());
+			writer.newLine();
+				
+			writer.write("maxDamageGiven="+stats.getMaxDamageGiven());
+			writer.newLine();
+				
+			writer.write("maxDamageTaken="+stats.getDamageTaken());
+			
+			writer.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}*/
+	
+	public void loadAllStats() {
 		File folder = fm.getFolder("\\stats");
 		
 		if(folder == null) {
@@ -86,9 +129,7 @@ public class StatsManager {
 		}
 		
 		for(File file : folder.listFiles()) {
-			Scanner scn;
-			try {
-				scn = new Scanner(file);
+			try (Scanner scn = new Scanner(file);){
 				UUID uuid = UUID.fromString(file.getName().replace(".txt", ""));
 				Stats stats = new Stats(uuid);
 				while(scn.hasNextLine()) {
@@ -129,10 +170,75 @@ public class StatsManager {
 						stats.setMaxDamageTaken(Integer.valueOf(value));
 					}
 				}
-					
+				
+				scn.close();
 				stats.calculateRatios();
 				addStats(stats);
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
 	}
+	
+	/*public Stats loadStats(UUID uuid) {
+		File folder = fm.getFolder("\\stats");
+		
+		if(folder == null) {
+			fm.createFolder("\\stats");
+			folder = fm.getFolder("\\stats");
+		}
+		
+		for(File file : folder.listFiles()) {
+			try (Scanner scn = new Scanner(file)) {
+				UUID fileUUID = UUID.fromString(file.getName().replace(".txt", ""));
+				if(fileUUID.equals(uuid)){
+					Stats stats = new Stats(uuid);
+					while(scn.hasNextLine()) {
+						String line = scn.nextLine(),
+							   value = null;
+						
+						if(line.startsWith("kills")) {
+							value = line.replaceFirst("kills=", "");
+							stats.setKills(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("deaths")) {
+							value = line.replaceFirst("deaths=", "");
+							stats.setDeaths(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("assists")) {
+							value = line.replaceFirst("assists=", "");
+							stats.setAssists(Integer.valueOf(value));
+						}
+						if(line.startsWith("maxKillStreak")) {
+							value = line.replaceFirst("maxKillStreak=", "");
+							stats.setMaxKillStreak(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("maxDeathStreak")) {
+							value = line.replaceFirst("maxDeathStreak=", "");
+							stats.setMaxDeathStreak(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("maxDamageGiven")) {
+							value = line.replaceFirst("maxDamageGiven=", "");
+							stats.setMaxDamageGiven(Integer.valueOf(value));
+						}
+
+						if(line.startsWith("maxDamageTaken")) {
+							value = line.replaceFirst("maxDamageTaken=", "");
+							stats.setMaxDamageTaken(Integer.valueOf(value));
+						}
+					}
+					
+					scn.close();
+					stats.calculateRatios();
+					return stats;
+				}
+			} catch (FileNotFoundException e) {
+				return null;
+			}
+		}
+		
+		return null;
+	}*/
 }

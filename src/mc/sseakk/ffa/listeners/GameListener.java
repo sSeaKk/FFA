@@ -38,19 +38,19 @@ public class GameListener implements Listener{
 	
 	private Map<Player, Player> lastDamager = new HashMap<Player, Player>();
 	private Map<Player, Long> lastDamagerCooldown = new HashMap<Player, Long>();
+	private Map<Player, Long> lastDamagerCooldown_voidCause = new HashMap<Player, Long>();
 	
 	private Map<Player, Assister> assisterMap = new HashMap<Player, Assister>();
 	private Map<Assister, Long> assisterCooldown = new HashMap<Assister, Long>();
 	
-	private Map<Player, Player> pvpMap = new HashMap<Player, Player>();
-	
 	//Assister Class
-	private static class Assister{
+	private static class Assister extends FFAPlayer{
 		private Player player;
 		private double damageGiven;
 		private static ArrayList<Assister> posibleAssistersList = new ArrayList<Assister>();
 		
 		private Assister(Player player) {
+			super(player);
 			this.player = player;
 			this.damageGiven = 0;
 			posibleAssistersList.add(this);
@@ -83,10 +83,6 @@ public class GameListener implements Listener{
 				posibleAssistersList.remove(getPosibleAssister(player));
 			}
 		}
-		
-		private Player getPlayer() {
-			return this.player;
-		}
 	}
 	
 	
@@ -103,11 +99,12 @@ public class GameListener implements Listener{
 			
 			if(am.getPlayerArena(playerKilled.getName()) != null) {
 				FFAPlayer ffaPlayerKilled = am.getPlayerArena(playerKilled.getName()).getFFAPlayer(playerKilled.getName()),
-						  ffaPlayerKiller = am.getPlayerArena(playerKiller.getName()).getFFAPlayer(playerKiller.getName());
+						  ffaPlayerKiller = am.getPlayerArena(playerKiller.getName()).getFFAPlayer(playerKiller.getName()),
+						  ffaPlayerAssister = am.getPlayerArena(playerAssister.getName()).getFFAPlayer(playerAssister.getName());
 				
-				Stats statsPlayerKilled = sm.getStats(playerKilled.getUniqueId()),
-					  statsPlayerKiller = sm.getStats(playerKiller.getUniqueId()),
-					  statsPlayerAssister = sm.getStats(playerAssister.getUniqueId());
+				Stats statsPlayerKilled = ffaPlayerKilled.getStats(),
+					  statsPlayerKiller = ffaPlayerKiller.getStats(),
+					  statsPlayerAssister = ffaPlayerAssister.getStats();
 				
 				Assister assister = assisterMap.get(playerKilled);
 				
@@ -164,6 +161,11 @@ public class GameListener implements Listener{
 			Stats stats = sm.getStats(player.getUniqueId());
 			ArrayList<FFAPlayer> playerList = am.getPlayerArena(player.getName()).getPlayerList();
 			
+			Player playerAssister = null;
+			try {
+				   playerAssister = assisterMap.get(player).getPlayer();
+			   } catch(NullPointerException e){}
+			
 			if(lastDamage.containsKey(player)) {
 				DamageCause cause = lastDamage.get(player);
 				
@@ -179,7 +181,26 @@ public class GameListener implements Listener{
 						} else {
 							lastDamager.remove(player);
 							lastDamagerCooldown.remove(player);
+							lastDamagerCooldown_voidCause.remove(player);
 						}
+					}
+					
+					if(lastDamagerPlayer != playerAssister) {
+						Assister assister = assisterMap.get(player);
+						
+						if(assisterCooldown.get(assister) > TimeUtil.currentTime()) {
+							fallDeathMessage = "&c" + player.getName() + " &6murio por caida escapando de &c" + lastDamagerPlayer.getName() + "&6 con la ayuda de &c" + playerAssister.getName();
+							enderPearlDeathMessage = "&c" + player.getName() + " &6murio por una ender pearl escapando de &c" + lastDamagerPlayer.getName() + "&6 con la ayuda de &c" + playerAssister.getName();
+							sm.getStats(playerAssister.getUniqueId()).increaseAssists();
+						}
+						
+						Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+							@Override
+							public void run() {
+								Messages.sendPlayerMessage(assister.getPlayer(), "&b+1 &6Asistencia");
+							}
+							
+						}, 1L);
 					}
 					
 					if(enderPearlThrowers.contains(player)) {
@@ -188,11 +209,11 @@ public class GameListener implements Listener{
 								Messages.sendAllPlayerArenaMessage(playerList, enderPearlDeathMessage);
 								if(lastDamagerPlayer != null) {
 									Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
-									Messages.sendPlayerMessage(lastDamagerPlayer, "&6+1 Asesinatos");
+									Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
 									statsLastDamagerPlayer.increaseKills();
 								}
 								
-								Messages.sendPlayerMessage(player, "&6+1 Muerte");
+								Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 								stats.increaseDeaths();
 								event.getDrops().clear();
 								event.setDroppedExp(0);
@@ -204,17 +225,41 @@ public class GameListener implements Listener{
 					Messages.sendAllPlayerArenaMessage(playerList, fallDeathMessage);
 					if(lastDamagerPlayer != null) {
 						Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
-						Messages.sendPlayerMessage(lastDamagerPlayer, "&6+1 Asesinatos");
+						Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
 						statsLastDamagerPlayer.increaseKills();
 					}
-					Messages.sendPlayerMessage(player, "&6+1 Muerte");
+					Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 					stats.increaseDeaths();
+					event.getDrops().clear();
+					event.setDroppedExp(0);
+					return;
+				} if(cause == DamageCause.VOID) {
+					String voidDeathMessage = "&c" + player.getName() + " &6cayo al vacio";
+					if(lastDamagerCooldown_voidCause.containsKey(player)) {
+						if(lastDamagerCooldown_voidCause.get(player) > TimeUtil.currentTime()) {
+							lastDamagerPlayer = lastDamager.get(player);
+							voidDeathMessage = "&c" + player.getName() + " &6cayo al vacio escapando de &c" + lastDamagerPlayer.getName();
+							
+							Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
+							Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
+							statsLastDamagerPlayer.increaseKills();
+						} else {
+							lastDamager.remove(player);
+							lastDamagerCooldown.remove(player);
+							lastDamagerCooldown_voidCause.remove(player);
+						}
+					}
+					
+					Messages.sendAllPlayerArenaMessage(playerList, voidDeathMessage);
+					stats.increaseDeaths();
+					Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 					event.getDrops().clear();
 					event.setDroppedExp(0);
 					return;
 				}
 			}
 		}
+		return;
 	}
 	
 	@EventHandler
@@ -227,6 +272,7 @@ public class GameListener implements Listener{
 				
 				if(lastDamagerCooldown.containsKey(playerDamaged)) {
 					lastDamagerCooldown.remove(playerDamaged);
+					lastDamagerCooldown_voidCause.remove(playerDamaged);
 					
 					if(lastDamager.get(playerDamaged) != playerDamager) {
 						lastDamager.remove(playerDamaged);
@@ -234,9 +280,11 @@ public class GameListener implements Listener{
 					}
 					
 					lastDamagerCooldown.put(playerDamaged, TimeUtil.lastDamagerCooldown());
+					lastDamagerCooldown_voidCause.put(playerDamaged, TimeUtil.lastDamagerCooldown_voidCause());
 				} else {
 					lastDamager.put(playerDamaged, playerDamager);
 					lastDamagerCooldown.put(playerDamaged, TimeUtil.lastDamagerCooldown());
+					lastDamagerCooldown_voidCause.put(playerDamaged, TimeUtil.lastDamagerCooldown_voidCause());
 				}
 				
 				//Assister setup
@@ -285,6 +333,8 @@ public class GameListener implements Listener{
 				}
 			}
 		}
+		
+		return;
 	}
 	
 	@EventHandler
@@ -298,6 +348,7 @@ public class GameListener implements Listener{
 			
 			lastDamage.put(player, event.getCause());
 		}
+		return;
 	}
 	
 	@EventHandler
@@ -320,5 +371,7 @@ public class GameListener implements Listener{
 				}
 			}
 		}
+		
+		return;
 	}
 }

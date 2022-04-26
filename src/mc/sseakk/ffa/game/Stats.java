@@ -5,7 +5,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-public class Stats {
+public class Stats{
 	private FFAPlayer fplayer;
 	private OfflinePlayer player;
 	private int kills, 
@@ -43,6 +43,7 @@ public class Stats {
 	
 	public Stats(FFAPlayer fplayer) {
 		this.fplayer = fplayer;
+		this.uuid = fplayer.getPlayer().getUniqueId();
 		this.setPlayer(fplayer.getPlayer());
 		
 		this.kills = 0;

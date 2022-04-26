@@ -24,7 +24,7 @@ public class FFA extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		sm.saveStats();
+		sm.saveAllStats();
 		am.saveArenas();
 		Messages.sendConsoleMessage("Deshabilitando plugin");
 	}
