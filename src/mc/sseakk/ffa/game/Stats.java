@@ -14,13 +14,13 @@ public class Stats{
 				killStreak, 
 				deathStreak, 
 				maxKillStreak, 
-				maxDeathStreak, 
-				damageGiven,
-				damageTaken,
-				maxDamageGiven,
-				maxDamageTaken;
+				maxDeathStreak;
 	private double kdaRatio,
-				   kdRatio;
+				   kdRatio,
+				   damageGiven,
+				   damageTaken,
+				   maxDamageGiven,
+				   maxDamageTaken;
 	private UUID uuid;
 	
 	public Stats(UUID uuid) {
@@ -115,35 +115,35 @@ public class Stats{
 		this.maxDeathStreak = maxDeathStreak;
 	}
 
-	public int getDamageGiven() {
+	public double getDamageGiven() {
 		return damageGiven;
 	}
 
-	public void setDamageGiven(int damageGiven) {
+	public void setDamageGiven(double damageGiven) {
 		this.damageGiven = damageGiven;
 	}
 
-	public int getDamageTaken() {
+	public double getDamageTaken() {
 		return damageTaken;
 	}
 
-	public void setDamageTaken(int damageTaken) {
+	public void setDamageTaken(double damageTaken) {
 		this.damageTaken = damageTaken;
 	}
 
-	public int getMaxDamageGiven() {
+	public double getMaxDamageGiven() {
 		return maxDamageGiven;
 	}
 
-	public void setMaxDamageGiven(int maxDamageGiven) {
+	public void setMaxDamageGiven(double maxDamageGiven) {
 		this.maxDamageGiven = maxDamageGiven;
 	}
 
-	public int getMaxDamageTaken() {
+	public double getMaxDamageTaken() {
 		return maxDamageTaken;
 	}
 
-	public void setMaxDamageTaken(int maxDamageTaken) {
+	public void setMaxDamageTaken(double maxDamageTaken) {
 		this.maxDamageTaken = maxDamageTaken;
 	}
 	
@@ -184,6 +184,7 @@ public class Stats{
 	public void increaseDeaths() {
 		this.deaths++;
 		calculateRatios();
+		resetDamages();
 		this.deathStreak++;
 		
 		if(this.killStreak > this.maxKillStreak) {
@@ -213,12 +214,38 @@ public class Stats{
 	public void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
-
-	public OfflinePlayer getPlayer() {
-		return player;
-	}
-
+	
 	public void setPlayer(OfflinePlayer player) {
 		this.player = player;
+	}
+	
+	public OfflinePlayer getOfflinePlayer() {
+		return this.player;
+	}
+	
+	public void increaseDamageGiven(double damage) {
+		this.damageGiven += damage;
+	}
+	
+	public void increaseDamageTaken(double damage) {
+		this.damageTaken += damage;
+	}
+	
+	public void resetDamages() {
+		if(this.damageGiven > this.maxDamageGiven) {
+			this.maxDamageGiven = this.damageGiven;
+		}
+		
+		if(this.damageTaken >  this.maxDamageTaken) {
+			this.maxDamageTaken = this.damageTaken;
+		}
+		
+		this.damageGiven = 0;
+		this.damageTaken = 0;
+	}
+	
+	public void saveActualStats() {
+		calculateRatios();
+		resetDamages();
 	}
 }

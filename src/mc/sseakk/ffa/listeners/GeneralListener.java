@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -79,6 +80,21 @@ public class GeneralListener implements Listener{
 		
 		if(arena != null) {
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		
+		if(am.getPlayerArena(player.getName()) != null) {
+			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+				public void run() {
+					event.getDrops().clear();
+					event.setDroppedExp(0);
+					player.spigot().respawn();
+				}
+			}, 20L);
 		}
 	}
 }

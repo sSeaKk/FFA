@@ -11,6 +11,7 @@ import mc.sseakk.ffa.game.Stats;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
+import mc.sseakk.ffa.util.TextUtil;
 
 public class FFACommand implements CommandExecutor{
 	
@@ -82,7 +83,10 @@ public class FFACommand implements CommandExecutor{
 												 + "\n"
 												 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
 												 + "\nDeath Streak: " + stats.getDeathStreak()
-												 + "\nMax Death Streak: " + stats.getMaxDeathStreak());
+												 + "\nMax Death Streak: " + stats.getMaxDeathStreak()
+											     + "\n"
+											     + "\nMax Damage Given: " + TextUtil.decimalFormat(stats.getMaxDamageGiven())
+											     + "\nMax Damage Taken: " + TextUtil.decimalFormat(stats.getMaxDamageTaken()));
 				
 				return true;
 			}

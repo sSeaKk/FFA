@@ -40,7 +40,8 @@ public class StatsManager {
 	public void saveAllStats() {
 		Messages.sendConsoleMessage("Guardando estadisticas");
 		for(Stats stats : this.gameStats) {
-			OfflinePlayer player = stats.getPlayer();
+			stats.saveActualStats();
+			OfflinePlayer player = stats.getOfflinePlayer();
 			fm.createFile("\\stats", player.getUniqueId().toString());
 			
 			BufferedWriter writer = fm.getBufferedWriter();
@@ -118,12 +119,12 @@ public class StatsManager {
 					
 					if(line.startsWith("maxDamageGiven")) {
 						value = line.replaceFirst("maxDamageGiven=", "");
-						stats.setMaxDamageGiven(Integer.valueOf(value));
+						stats.setMaxDamageGiven(Double.valueOf(value));
 					}
 
 					if(line.startsWith("maxDamageTaken")) {
 						value = line.replaceFirst("maxDamageTaken=", "");
-						stats.setMaxDamageTaken(Integer.valueOf(value));
+						stats.setMaxDamageTaken(Double.valueOf(value));
 					}
 				}
 				

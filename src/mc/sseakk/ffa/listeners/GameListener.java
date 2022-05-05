@@ -25,6 +25,7 @@ import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.mainpackage.StatsManager;
 import mc.sseakk.ffa.util.Messages;
+import mc.sseakk.ffa.util.SoundUtil;
 import mc.sseakk.ffa.util.TimeUtil;
 
 public class GameListener implements Listener{
@@ -44,13 +45,12 @@ public class GameListener implements Listener{
 	private Map<Assister, Long> assisterCooldown = new HashMap<Assister, Long>();
 	
 	//Assister Class
-	private static class Assister extends FFAPlayer{
+	private static class Assister{
 		private Player player;
 		private double damageGiven;
 		private static ArrayList<Assister> posibleAssistersList = new ArrayList<Assister>();
 		
 		private Assister(Player player) {
-			super(player);
 			this.player = player;
 			this.damageGiven = 0;
 			posibleAssistersList.add(this);
@@ -82,6 +82,10 @@ public class GameListener implements Listener{
 			if(getPosibleAssister(player) != null) {
 				posibleAssistersList.remove(getPosibleAssister(player));
 			}
+		}
+
+		public Player getPlayer() {
+			return this.player;
 		}
 	}
 	
@@ -136,12 +140,14 @@ public class GameListener implements Listener{
 					statsPlayerKilled.increaseDeaths();
 					event.getDrops().clear();
 					event.setDroppedExp(0);
+					SoundUtil.deathSound(playerKilled);
 					Messages.sendPlayerMessage(playerKilled, killedMessage);
 					
 					//Player Killer
 					statsPlayerKiller.increaseKills();
 					if(playerKiller.hasPotionEffect(PotionEffectType.REGENERATION)) { playerKiller.removePotionEffect(PotionEffectType.REGENERATION); }
 					playerKiller.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 2));
+					SoundUtil.killSound(playerKiller);
 					Messages.sendPlayerMessage(playerKiller, killerMessage);
 					
 					for(FFAPlayer ffaplayer : am.getPlayerArena(playerKilled.getName()).getPlayerList()) {
@@ -211,12 +217,12 @@ public class GameListener implements Listener{
 									Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 									Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
 									statsLastDamagerPlayer.increaseKills();
+									SoundUtil.killSound(lastDamagerPlayer);									
 								}
 								
 								Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 								stats.increaseDeaths();
-								event.getDrops().clear();
-								event.setDroppedExp(0);
+								SoundUtil.deathSound(player);
 								return;
 							}
 						}
@@ -230,6 +236,7 @@ public class GameListener implements Listener{
 					}
 					Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 					stats.increaseDeaths();
+					SoundUtil.deathSound(player);
 					event.getDrops().clear();
 					event.setDroppedExp(0);
 					return;
@@ -243,6 +250,7 @@ public class GameListener implements Listener{
 							Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 							Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
 							statsLastDamagerPlayer.increaseKills();
+							SoundUtil.killSound(lastDamagerPlayer);
 						} else {
 							lastDamager.remove(player);
 							lastDamagerCooldown.remove(player);
@@ -252,6 +260,7 @@ public class GameListener implements Listener{
 					
 					Messages.sendAllPlayerArenaMessage(playerList, voidDeathMessage);
 					stats.increaseDeaths();
+					SoundUtil.deathSound(player);
 					Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
 					event.getDrops().clear();
 					event.setDroppedExp(0);
@@ -267,6 +276,12 @@ public class GameListener implements Listener{
 		if(event.getEntityType().equals(EntityType.PLAYER) && event.getDamager().getType().equals(EntityType.PLAYER) && event.getCause().equals(DamageCause.ENTITY_ATTACK)) {
 			Player playerDamaged = (Player) event.getEntity(),
 				   playerDamager = (Player) event.getDamager();
+			
+			Stats damagerStats = sm.getStats(playerDamager.getUniqueId()),
+				  damagedStats = sm.getStats(playerDamaged.getUniqueId());
+			
+			damagerStats.increaseDamageGiven(event.getFinalDamage());
+			damagedStats.increaseDamageTaken(event.getFinalDamage());
 			
 			if(am.getPlayerArena(playerDamaged.getName()).equals(am.getPlayerArena(playerDamager.getName()))) {
 				
