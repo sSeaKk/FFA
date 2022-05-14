@@ -79,9 +79,13 @@ public class FFAPlayer{
 		this.player.setFoodLevel(this.stored.getStoredHunger());
 		this.player.setFlying(this.isFlying());
 		this.player.removePotionEffect(potionEffect.getType());
+		this.player.setExp(0.9999f);
 		
 		this.player.setScoreboard(previousScoreboard);
 		this.player.teleport(this.previousLocation);
+		
+		this.stats.saveActualStats();
+		this.stats.resetSessionStats();
 	}
 	
 	public Stats getStats() {

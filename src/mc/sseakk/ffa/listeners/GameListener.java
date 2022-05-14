@@ -5,8 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.FireworkEffect.Type;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,11 +20,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.FFAPlayer;
 import mc.sseakk.ffa.game.Stats;
+import mc.sseakk.ffa.game.events.KillStreakEvent;
+import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.mainpackage.StatsManager;
@@ -165,7 +173,7 @@ public class GameListener implements Listener{
 			Player player = (Player) event.getEntity();
 			Player lastDamagerPlayer = null;
 			Stats stats = sm.getStats(player.getUniqueId());
-			ArrayList<FFAPlayer> playerList = am.getPlayerArena(player.getName()).getPlayerList();
+			Arena arena = am.getPlayerArena(player.getName());
 			
 			Player playerAssister = null;
 			try {
@@ -212,12 +220,12 @@ public class GameListener implements Listener{
 					if(enderPearlThrowers.contains(player)) {
 						if(enderPearlDeathCooldown.containsKey(player)) {
 							if(enderPearlDeathCooldown.get(player) > TimeUtil.currentTime()) {
-								Messages.sendAllPlayerArenaMessage(playerList, enderPearlDeathMessage);
+								arena.broadcast(enderPearlDeathMessage);
 								if(lastDamagerPlayer != null) {
 									Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 									Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
 									statsLastDamagerPlayer.increaseKills();
-									SoundUtil.killSound(lastDamagerPlayer);									
+									SoundUtil.killSound(lastDamagerPlayer);
 								}
 								
 								Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
@@ -228,7 +236,7 @@ public class GameListener implements Listener{
 						}
 					}
 					
-					Messages.sendAllPlayerArenaMessage(playerList, fallDeathMessage);
+					arena.broadcast(fallDeathMessage);
 					if(lastDamagerPlayer != null) {
 						Stats statsLastDamagerPlayer = sm.getStats(lastDamagerPlayer.getUniqueId());
 						Messages.sendPlayerMessage(lastDamagerPlayer, "&a+1 &6Asesinatos");
@@ -258,7 +266,8 @@ public class GameListener implements Listener{
 						}
 					}
 					
-					Messages.sendAllPlayerArenaMessage(playerList, voidDeathMessage);
+					
+					arena.broadcast(voidDeathMessage);
 					stats.increaseDeaths();
 					SoundUtil.deathSound(player);
 					Messages.sendPlayerMessage(player, "&c+1 &6Muerte");
@@ -368,6 +377,8 @@ public class GameListener implements Listener{
 	
 	@EventHandler
 	public void onInteract(PlayerInteractEvent event) {
+
+		
 		Player player = event.getPlayer();
 		
 		if(player.getItemInHand().getType() == Material.ENDER_PEARL && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
@@ -385,6 +396,92 @@ public class GameListener implements Listener{
 					enderPearlDeathCooldown.remove(player);
 				}
 			}
+		}
+		
+		return;
+	}
+	
+	@EventHandler
+	public void onKillStreak(KillStreakEvent event) {
+		Arena arena = am.getPlayerArena(event.getPlayer().getName());
+		Firework firework = (Firework) event.getPlayer().getWorld().spawnEntity(event.getPlayer().getLocation(), EntityType.FIREWORK);
+		FireworkMeta meta = firework.getFireworkMeta();
+		ArrayList<Color> colors = new ArrayList<Color>();
+
+		firework.setFireworkMeta(meta);
+		
+		if(event.getType().equals(KillStreakType.fiveKS)) {
+			colors.add(Color.WHITE);
+			
+			meta.setPower(0);
+			meta.addEffect(FireworkEffect.builder().with(Type.BURST).withColor(colors).build());
+			firework.setFireworkMeta(meta);
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 5 kills sin morir!");
+			colors.clear();
+			return;
+		}
+		
+		if(event.getType().equals(KillStreakType.tenKS)) {
+			colors.add(Color.WHITE); colors.add(Color.SILVER);
+			
+			meta.setPower(1);
+			meta.addEffect(FireworkEffect.builder().trail(true).with(Type.BALL).withColor(colors).build());
+			firework.setFireworkMeta(meta);
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 10 kills sin morir!");
+			colors.clear();
+			return;
+		}
+		
+		if(event.getType().equals(KillStreakType.fifthteenKS)) {
+			colors.add(Color.WHITE); colors.add(Color.SILVER); colors.add(Color.PURPLE);
+			
+			meta.setPower(1);
+			meta.addEffect(FireworkEffect.builder().flicker(true).with(Type.BALL_LARGE).withColor(colors).withFade(Color.RED).build());
+			firework.setFireworkMeta(meta);
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 15 kills sin morir!!");
+			colors.clear();
+			return;
+		}
+
+		if(event.getType().equals(KillStreakType.twentyKS)) {
+			colors.add(Color.WHITE); colors.add(Color.SILVER); colors.add(Color.ORANGE);
+			
+			meta.setPower(1);
+			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.STAR).withColor(colors).withFade(Color.RED).build());
+			firework.setFireworkMeta(meta);
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 20 kills sin morir!!!!");
+			colors.clear();
+			return;
+		}
+		
+		if(event.getType().equals(KillStreakType.twentyfiveKS)) {
+			colors.add(Color.GRAY); colors.add(Color.SILVER); colors.add(Color.FUCHSIA);
+			
+			meta.setPower(2);
+			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.STAR).withColor(colors).withFade(Color.RED).build());
+			firework.setFireworkMeta(meta);
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 25 kills sin morir!!!!");
+			colors.clear();
+			return;
+		}
+		
+		if(event.getType().equals(KillStreakType.thirtyKS)) {
+			colors.add(Color.GRAY); colors.add(Color.WHITE); colors.add(Color.RED);
+			
+			meta.setPower(1);
+			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.STAR).withColor(colors).withFade(Color.RED).build());
+			firework.setFireworkMeta(meta);
+			
+			firework = (Firework) event.getPlayer().getWorld().spawnEntity(event.getPlayer().getLocation(), EntityType.FIREWORK);
+			meta = firework.getFireworkMeta();
+			
+			meta.setPower(1);
+			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.CREEPER).withColor(Color.RED).withColor(Color.BLACK).withFade(Color.GRAY).build());
+			firework.setFireworkMeta(meta);
+			
+			arena.broadcast("&c" + event.getPlayer().getName() + " &6lleva 30 kills sin morir!!!!!!!!");
+			colors.clear();
+			return;
 		}
 		
 		return;

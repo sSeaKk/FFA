@@ -7,8 +7,15 @@ import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
+import mc.sseakk.ffa.util.TextUtil;
 
 public class Arena {
+	
+	public enum ArenaStatus {
+		DISABLED,
+		MAINTENANCE,
+		ENABLED;
+	}
 	
 	private String name;
 	private int currentPlayers;
@@ -141,5 +148,11 @@ public class Arena {
 
 	public void setConfigurator(Player configurator) {
 		this.configurator = configurator;
+	}
+	
+	public void broadcast(String message) {
+		for(FFAPlayer player : playerList) {
+			Messages.sendPlayerMessage(player.getPlayer(), TextUtil.colorText(message));
+		}
 	}
 }

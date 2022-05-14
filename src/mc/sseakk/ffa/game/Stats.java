@@ -4,6 +4,10 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.plugin.PluginManager;
+
+import mc.sseakk.ffa.game.events.KillStreakEvent;
+import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
 
 public class Stats{
 	private FFAPlayer fplayer;
@@ -171,6 +175,9 @@ public class Stats{
 		this.kills++;
 		calculateRatios();
 		this.killStreak++;
+		detectEvents();
+		this.fplayer.getPlayer().setLevel(this.killStreak);
+		this.fplayer.getPlayer().setExp(0.9999f);
 		
 		if(this.deathStreak > this.maxDeathStreak) {
 			this.maxDeathStreak = this.deathStreak;
@@ -179,6 +186,7 @@ public class Stats{
 		if(this.deathStreak != 0) {
 			this.deathStreak = 0;
 		}
+		
 	}
 	
 	public void increaseDeaths() {
@@ -244,8 +252,43 @@ public class Stats{
 		this.damageTaken = 0;
 	}
 	
+	public void resetSessionStats() {
+		this.killStreak = 0;
+		this.deathStreak = 0;
+		
+		resetDamages();
+	}
+	
 	public void saveActualStats() {
 		calculateRatios();
 		resetDamages();
+	}
+	
+	public void detectEvents() {
+		PluginManager pm = Bukkit.getServer().getPluginManager();
+		
+		if(this.killStreak == 5) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.fiveKS));
+		}
+		
+		if(this.killStreak == 10) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.tenKS));
+		}
+		
+		if(this.killStreak == 15) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.fifthteenKS));
+		}
+		
+		if(this.killStreak == 20) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyKS));
+		}
+		
+		if(this.killStreak == 25) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyfiveKS));
+		}
+		
+		if(this.killStreak == 30) {
+			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.thirtyKS));
+		}
 	}
 }

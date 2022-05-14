@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.ArenaStatus;
+import mc.sseakk.ffa.game.Arena.ArenaStatus;
 import mc.sseakk.ffa.game.Stats;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;

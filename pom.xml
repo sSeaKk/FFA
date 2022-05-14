@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>FFA</groupId>
   <artifactId>FFA</artifactId>
-  <version>vb0.2-r</version>
+  <version>vb0.3-b23</version>
   <name>FFA</name>
   <build>
     <sourceDirectory>src</sourceDirectory>
