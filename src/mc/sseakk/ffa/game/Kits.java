@@ -23,24 +23,29 @@ public class Kits {
 
 		item = new ItemStack(Material.DIAMOND_HELMET);
 		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+		item.addEnchantment(Enchantment.DURABILITY, 3);
 		armadura.setHelmet(item);
 		
 		item = new ItemStack(Material.DIAMOND_CHESTPLATE);
 		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+		item.addEnchantment(Enchantment.DURABILITY, 3);
 		armadura.setChestplate(item);
 		
 		item = new ItemStack(Material.DIAMOND_LEGGINGS);
 		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+		item.addEnchantment(Enchantment.DURABILITY, 3);
 		armadura.setLeggings(item);
 		
 		item = new ItemStack(Material.DIAMOND_BOOTS);
 		item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+		item.addEnchantment(Enchantment.DURABILITY, 3);
 		armadura.setBoots(item);
 		
 		
 		
 		item = new ItemStack(Material.DIAMOND_SWORD);
 		item.addEnchantment(Enchantment.DAMAGE_ALL, 2);
+		item.addEnchantment(Enchantment.DURABILITY, 3);
 		inventario.setItem(0, item);
 		
 		item = new ItemStack(Material.ENDER_PEARL, 16);

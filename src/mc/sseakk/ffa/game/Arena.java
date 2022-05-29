@@ -1,16 +1,19 @@
 package mc.sseakk.ffa.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import mc.sseakk.ffa.game.player.FFAPlayer;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
-import mc.sseakk.ffa.util.TextUtil;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class Arena {
-	
+	//TODO: Heredar clase arena
 	public enum ArenaStatus {
 		DISABLED,
 		MAINTENANCE,
@@ -33,14 +36,14 @@ public class Arena {
 		this.currentPlayers = 0;
 		this.setHasFile(false);
 		this.spawn = null;
-		StatsScoreboard.initScoreboard(this);
+		ArenaScoreboard.initScoreboard(this);
 	}
 	
 	public Arena() {
 		this.playerList = new ArrayList<FFAPlayer>();
 		this.status = ArenaStatus.DISABLED;
 		this.currentPlayers = 0;
-		StatsScoreboard.initScoreboard(this);
+		ArenaScoreboard.initScoreboard(this);
 	}
 	
 	public void addPlayer(Player player) {
@@ -82,6 +85,15 @@ public class Arena {
 		for(int i=0; i<playerList.size(); i++) {
 			if(playerList.get(i).getPlayer().getName().equals(playerName)) {
 				return playerList.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public FFAPlayer getFFAPlayer(Player player) {
+		for(FFAPlayer fplayer : this.playerList) {
+			if(fplayer.getPlayer().equals(player)) {
+				return fplayer;
 			}
 		}
 		return null;
@@ -150,9 +162,32 @@ public class Arena {
 		this.configurator = configurator;
 	}
 	
-	public void broadcast(String message) {
-		for(FFAPlayer player : playerList) {
-			Messages.sendPlayerMessage(player.getPlayer(), TextUtil.colorText(message));
+	public void broadcast(TextComponent... textList) {
+		for(FFAPlayer ffaplayer : this.playerList) {
+			Messages.sendPlayerMessage(ffaplayer.getPlayer(), textList);
+		}
+	}
+	
+	public void broadcast(String text) {
+		for(FFAPlayer ffaplayer : this.playerList) {
+			Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
+		}
+	}
+	
+	public void broadcastWithout(String text, Player... players) {
+		List<Player> arr = Arrays.asList(players);
+		for(FFAPlayer ffaplayer : this.playerList) {
+			if(!arr.contains(ffaplayer.getPlayer())) {
+				Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
+			}
+		}
+	}
+	
+	public void broadcastWithout(List<Player> players, TextComponent... text){
+		for(FFAPlayer ffaplayer : this.getPlayerList()) {
+			if(!players.contains(ffaplayer.getPlayer())){
+				Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
+			}
 		}
 	}
 }

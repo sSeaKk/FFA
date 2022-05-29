@@ -11,10 +11,12 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
+import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Stats;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.TextUtil;
 
-public class StatsScoreboard {
+public class ArenaScoreboard {
 	private static int taskID;
 	
 	public static void initScoreboard(Arena arena) { 
@@ -67,7 +69,7 @@ public class StatsScoreboard {
 	}
 
 	private static void setTaskID(int taskID) {
-		StatsScoreboard.taskID = taskID;
+		ArenaScoreboard.taskID = taskID;
 	}
 	
 	@SuppressWarnings("unused")

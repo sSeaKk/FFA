@@ -13,8 +13,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.FFAPlayer;
 import mc.sseakk.ffa.game.Kits;
+import mc.sseakk.ffa.game.player.FFAPlayer;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 
@@ -54,7 +54,7 @@ public class GeneralListener implements Listener{
 			
 			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
 				public void run() {
-					player.addPotionEffect(FFAPlayer.getPotionEffect());
+					player.addPotionEffect(FFAPlayer.getSpawnPotionEffect());
 				}
 			}, 1L);
 			

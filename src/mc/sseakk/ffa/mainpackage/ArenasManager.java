@@ -12,7 +12,7 @@ import org.bukkit.World;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.FFAPlayer;
+import mc.sseakk.ffa.game.player.FFAPlayer;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;
@@ -73,7 +73,7 @@ public class ArenasManager {
 	}
 	
 	public void saveArenas() {
-		Messages.sendConsoleMessage("Guardando arenas");
+		Messages.infoMessage("Guardando arenas");
 		for(Arena arena : this.gameArenas) {
 			
 			if(!arena.getPlayerList().isEmpty()) {

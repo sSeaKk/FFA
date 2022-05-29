@@ -10,7 +10,7 @@ import java.util.UUID;
 
 import org.bukkit.OfflinePlayer;
 
-import mc.sseakk.ffa.game.Stats;
+import mc.sseakk.ffa.game.player.Stats;
 import mc.sseakk.ffa.util.Messages;
 
 public class StatsManager {
@@ -38,7 +38,7 @@ public class StatsManager {
 	}
 	
 	public void saveAllStats() {
-		Messages.sendConsoleMessage("Guardando estadisticas");
+		Messages.infoMessage("Guardando estadisticas");
 		for(Stats stats : this.gameStats) {
 			stats.saveActualStats();
 			OfflinePlayer player = stats.getOfflinePlayer();

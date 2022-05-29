@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.game;
+package mc.sseakk.ffa.game.player;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -7,6 +7,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
+import mc.sseakk.ffa.game.ArenaScoreboard;
+import mc.sseakk.ffa.game.Kits;
+import mc.sseakk.ffa.game.StoredElements;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.mainpackage.StatsManager;
 
@@ -16,10 +19,11 @@ public class FFAPlayer{
 	private StoredElements stored;
 	private Location previousLocation;
 	private boolean flying;
-	private static PotionEffect potionEffect;
+	private static PotionEffect spawnPotionEffect;
 	private StatsManager sm;
 	private Stats stats;
 	private Scoreboard previousScoreboard;
+	private Profile profile;
 	
 	public FFAPlayer(Player player) {
 		this.player = player;
@@ -34,17 +38,19 @@ public class FFAPlayer{
 				player.getMaxHealth()
 				);
 		
+		this.profile = new Profile(this);
+		
 		this.previousLocation = player.getLocation();
 		this.previousScoreboard = player.getScoreboard();
 		
 		this.flying = player.isFlying();
-		potionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
+		spawnPotionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
 		
 		this.player.setFoodLevel(20);
 		this.player.setHealth(20);
 		this.player.setGameMode(GameMode.SURVIVAL);
 		
-		this.player.addPotionEffect(potionEffect);
+		this.player.addPotionEffect(spawnPotionEffect);
 		
 		this.player.getInventory().clear();
 		this.player.getEquipment().clear();
@@ -61,7 +67,7 @@ public class FFAPlayer{
 			this.stats.setFplayer(this);
 		}
 		
-		StatsScoreboard.updateStatsScoreboard(this);
+		ArenaScoreboard.updateStatsScoreboard(this);
 	}
 	
 	public void removePlayer() {
@@ -78,7 +84,7 @@ public class FFAPlayer{
 		this.player.setMaxHealth(this.stored.getStoredMaxHealth());
 		this.player.setFoodLevel(this.stored.getStoredHunger());
 		this.player.setFlying(this.isFlying());
-		this.player.removePotionEffect(potionEffect.getType());
+		this.player.removePotionEffect(spawnPotionEffect.getType());
 		this.player.setExp(0.9999f);
 		
 		this.player.setScoreboard(previousScoreboard);
@@ -103,12 +109,12 @@ public class FFAPlayer{
 	public boolean isFlying() {
 		return flying;
 	}
-
-	public static PotionEffect getPotionEffect() {
-		return potionEffect;
+	
+	public static PotionEffect getSpawnPotionEffect() {
+		return spawnPotionEffect;
 	}
-
-	public static void setPotionEffect(PotionEffect effect) {
-		potionEffect = effect;
+	
+	public Profile getProfile() {
+		return profile;
 	}
 }

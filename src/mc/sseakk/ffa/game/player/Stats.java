@@ -1,13 +1,13 @@
-package mc.sseakk.ffa.game;
+package mc.sseakk.ffa.game.player;
 
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.plugin.PluginManager;
 
 import mc.sseakk.ffa.game.events.KillStreakEvent;
 import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
+import mc.sseakk.ffa.mainpackage.FFA;
 
 public class Stats{
 	private FFAPlayer fplayer;
@@ -265,30 +265,29 @@ public class Stats{
 	}
 	
 	public void detectEvents() {
-		PluginManager pm = Bukkit.getServer().getPluginManager();
-		
 		if(this.killStreak == 5) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.fiveKS));
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.fiveKS));
 		}
 		
 		if(this.killStreak == 10) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.tenKS));
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.tenKS));
 		}
 		
 		if(this.killStreak == 15) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.fifthteenKS));
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.fifthteenKS));
 		}
 		
 		if(this.killStreak == 20) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyKS));
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyKS));
 		}
 		
 		if(this.killStreak == 25) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyfiveKS));
+			
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.twentyfiveKS));
 		}
 		
 		if(this.killStreak == 30) {
-			pm.callEvent(new KillStreakEvent(fplayer, KillStreakType.thirtyKS));
+			FFA.getPluginManager().callEvent(new KillStreakEvent(fplayer, KillStreakType.thirtyKS));
 		}
 	}
 }

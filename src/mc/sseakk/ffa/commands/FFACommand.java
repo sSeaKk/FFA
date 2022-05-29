@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.Stats;
+import mc.sseakk.ffa.game.player.Stats;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -21,7 +21,7 @@ public class FFACommand implements CommandExecutor{
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if(!(sender instanceof Player)) {
-			Messages.sendConsoleMessage("Este comando solo puede ser ejecutado dentro del juego");
+			Messages.infoMessage("Este comando solo puede ser ejecutado dentro del juego");
 			return true;
 		}
 		
