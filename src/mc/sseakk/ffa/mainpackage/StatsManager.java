@@ -8,29 +8,28 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
-import mc.sseakk.ffa.game.player.Stats;
+import mc.sseakk.ffa.game.player.Warrior;
 import mc.sseakk.ffa.util.Messages;
 
 public class StatsManager {
-	private FileManager fm;
-	private ArrayList<Stats> gameStats;
+	private static FileManager fm;
+	private ArrayList<Warrior> gameStats = new ArrayList<Warrior>();
 	
 	public StatsManager(){
-		this.fm = FFA.getFileManager();
-		this.gameStats = new ArrayList<Stats>();
-		loadAllStats();
+		fm = FFA.getFileManager();
 	}
 	
-	public void addStats(Stats stats) {
-		this.gameStats.add(stats);
+	public void addToStatsList(Warrior player) {
+		this.gameStats.add(player);
 	}
 	
-	public Stats getStats(UUID uuid) {
-		for(Stats stats : this.gameStats){
-			if(stats.getUuid().equals(uuid)) {
-				return stats;
+	public Warrior getFromStatsList(String playerName) {
+		for(Warrior fp : this.gameStats) {
+			if(fp.getName().equals(playerName)) {
+				return fp;
 			}
 		}
 		
@@ -39,10 +38,9 @@ public class StatsManager {
 	
 	public void saveAllStats() {
 		Messages.infoMessage("Guardando estadisticas");
-		for(Stats stats : this.gameStats) {
-			stats.saveActualStats();
-			OfflinePlayer player = stats.getOfflinePlayer();
-			fm.createFile("\\stats", player.getUniqueId().toString());
+		for(Warrior player : this.gameStats) {
+			player.saveActualStats();
+			fm.createFile("\\stats", player.getPlayer().getUniqueId().toString());
 			
 			BufferedWriter writer = fm.getBufferedWriter();
 			
@@ -50,25 +48,25 @@ public class StatsManager {
 				writer.write("name="+player.getName());
 				writer.newLine();
 				
-				writer.write("kills="+stats.getKills());
+				writer.write("kills="+player.getKills());
 				writer.newLine();
 				
-				writer.write("deaths="+stats.getDeaths());
+				writer.write("deaths="+player.getDeaths());
 				writer.newLine();
 				
-				writer.write("assists="+stats.getAssists());
+				writer.write("assists="+player.getAssists());
 				writer.newLine();
 				
-				writer.write("maxKillStreak="+stats.getMaxKillStreak());
+				writer.write("maxKillStreak="+player.getMaxKillStreak());
 				writer.newLine();
 				
-				writer.write("maxDeathStreak="+stats.getMaxDeathStreak());
+				writer.write("maxDeathStreak="+player.getMaxDeathStreak());
 				writer.newLine();
 				
-				writer.write("maxDamageGiven="+stats.getMaxDamageGiven());
+				writer.write("maxDamageGiven="+player.getMaxDamageGiven());
 				writer.newLine();
 				
-				writer.write("maxDamageTaken="+stats.getDamageTaken());
+				writer.write("maxDamageTaken="+player.getDamageTaken());
 				
 				writer.close();
 			} catch(IOException e) {
@@ -77,7 +75,7 @@ public class StatsManager {
 		}
 	}
 	
-	public void loadAllStats() {
+	public void loadStats(UUID playerUUID) {
 		File folder = fm.getFolder("\\stats");
 		
 		if(folder == null) {
@@ -88,49 +86,54 @@ public class StatsManager {
 		for(File file : folder.listFiles()) {
 			try (Scanner scn = new Scanner(file);){
 				UUID uuid = UUID.fromString(file.getName().replace(".txt", ""));
-				Stats stats = new Stats(uuid);
-				while(scn.hasNextLine()) {
-					String line = scn.nextLine(),
-						   value = null;
-					
-					if(line.startsWith("kills")) {
-						value = line.replaceFirst("kills=", "");
-						stats.setKills(Integer.valueOf(value));
-					}
-					
-					if(line.startsWith("deaths")) {
-						value = line.replaceFirst("deaths=", "");
-						stats.setDeaths(Integer.valueOf(value));
-					}
-					
-					if(line.startsWith("assists")) {
-						value = line.replaceFirst("assists=", "");
-						stats.setAssists(Integer.valueOf(value));
-					}
-					if(line.startsWith("maxKillStreak")) {
-						value = line.replaceFirst("maxKillStreak=", "");
-						stats.setMaxKillStreak(Integer.valueOf(value));
-					}
-					
-					if(line.startsWith("maxDeathStreak")) {
-						value = line.replaceFirst("maxDeathStreak=", "");
-						stats.setMaxDeathStreak(Integer.valueOf(value));
-					}
-					
-					if(line.startsWith("maxDamageGiven")) {
-						value = line.replaceFirst("maxDamageGiven=", "");
-						stats.setMaxDamageGiven(Double.valueOf(value));
-					}
+				System.out.println(playerUUID.toString());
+				System.out.println(uuid.toString());
+				if(playerUUID.equals(uuid)) {
+					System.out.println("cargando stats de " + Bukkit.getPlayer(uuid).getName());
+					Warrior warrior = new Warrior(FFA.getInstance().getServer().getPlayer(playerUUID));
+					while(scn.hasNextLine()) {
+						String line = scn.nextLine(),
+							   value = null;
+						
+						if(line.startsWith("kills")) {
+							value = line.replaceFirst("kills=", "");
+							warrior.setKills(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("deaths")) {
+							value = line.replaceFirst("deaths=", "");
+							warrior.setDeaths(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("assists")) {
+							value = line.replaceFirst("assists=", "");
+							warrior.setAssists(Integer.valueOf(value));
+						}
+						if(line.startsWith("maxKillStreak")) {
+							value = line.replaceFirst("maxKillStreak=", "");
+							warrior.setMaxKillStreak(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("maxDeathStreak")) {
+							value = line.replaceFirst("maxDeathStreak=", "");
+							warrior.setMaxDeathStreak(Integer.valueOf(value));
+						}
+						
+						if(line.startsWith("maxDamageGiven")) {
+							value = line.replaceFirst("maxDamageGiven=", "");
+							warrior.setMaxDamageGiven(Double.valueOf(value));
+						}
 
-					if(line.startsWith("maxDamageTaken")) {
-						value = line.replaceFirst("maxDamageTaken=", "");
-						stats.setMaxDamageTaken(Double.valueOf(value));
+						if(line.startsWith("maxDamageTaken")) {
+							value = line.replaceFirst("maxDamageTaken=", "");
+							warrior.setMaxDamageTaken(Double.valueOf(value));
+						}
 					}
+					
+					scn.close();
+					warrior.calculateRatios();
+					addToStatsList(warrior);
 				}
-				
-				scn.close();
-				stats.calculateRatios();
-				addStats(stats);
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
 	}

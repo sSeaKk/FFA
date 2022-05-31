@@ -29,7 +29,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ArenaListener implements Listener{
 	private ArenasManager am = FFA.getArenasManager();
-	
+	//TODO; cambiar los parametros de ArenaListener
 	private TextComponent 
 		killTag = TextUtil.stringToTextComponent("&6 [&a+1 &6Asesinato]"),
 		minimalKillTag = TextUtil.stringToTextComponent("&a+1 Asesinato"),
@@ -56,7 +56,7 @@ public class ArenaListener implements Listener{
 				assisterProfile = event.getAssister().getProfile().getText();
 				
 				//Assister
-				event.getAssister().getStats().increaseAssists();
+				event.getAssister().increaseAssists();
 				SoundUtil.assistSound(event.getAssister().getPlayer());
 				Messages.delayedMessage(event.getAssister().getPlayer(), 1, 
 						FFA.getTextTag(), this.assistTag);
@@ -69,13 +69,13 @@ public class ArenaListener implements Listener{
 			//Killer
 			event.getKiller().getPlayer().removePotionEffect(PotionEffectType.REGENERATION);
 			event.getKiller().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 2));
-			event.getKiller().getStats().increaseKills();
+			event.getKiller().increaseKills();
 			SoundUtil.killSound(event.getKiller().getPlayer());
 			Messages.sendPlayerMessage(event.getKiller().getPlayer(), 
 					FFA.getTextTag(), this.killerMessage, event.getKilled().getProfile().getText(), chainer, assisterProfile, this.killTag);
 			
 			//Killed
-			event.getKilled().getStats().increaseDeaths();
+			event.getKilled().increaseDeaths();
 			SoundUtil.deathSound(event.getKilled().getPlayer());
 			Messages.sendPlayerMessage(event.getKilled().getPlayer(), 
 					FFA.getTextTag(), this.killedMessage, event.getKiller().getProfile().getText(), chainer, assisterProfile, this.deathTag);
@@ -93,7 +93,7 @@ public class ArenaListener implements Listener{
 			
 			event.getKiller().getPlayer().removePotionEffect(PotionEffectType.REGENERATION);
 			event.getKiller().getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 80, 2));
-			event.getKiller().getStats().increaseKills();
+			event.getKiller().increaseKills();
 			
 			SoundUtil.killSound(event.getKiller().getPlayer());
 			Messages.delayedMessage(event.getKiller().getPlayer(), 1L, 
@@ -113,7 +113,7 @@ public class ArenaListener implements Listener{
 		}
 		
 		//Killed
-		event.getKilled().getStats().increaseDeaths();
+		event.getKilled().increaseDeaths();
 		SoundUtil.deathSound(event.getKilled().getPlayer());
 		Messages.sendPlayerMessage(event.getKilled().getPlayer(), 
 				FFA.getTextTag(), this.minimalDeathTag);

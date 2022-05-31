@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.events.KillStreakEvent;
 import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Warrior;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 
@@ -22,7 +22,7 @@ public class TestCommand implements CommandExecutor{
 		}
 		
 		Player player = (Player) sender;
-		FFAPlayer fp= FFA.getArenasManager().getPlayerArena(player.getName()).getFFAPlayer(player.getName());
+		Warrior fp= FFA.getArenasManager().getPlayerArena(player.getName()).getFFAPlayer(player.getName());
 		
 		
 		if(args.length > 0) {

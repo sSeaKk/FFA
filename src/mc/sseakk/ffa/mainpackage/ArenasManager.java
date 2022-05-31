@@ -12,7 +12,7 @@ import org.bukkit.World;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Warrior;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;
@@ -45,9 +45,9 @@ public class ArenasManager {
 	
 	public Arena getPlayerArena(String playerName) {
 		for(Arena arena : this.gameArenas) {
-			ArrayList<FFAPlayer> players = arena.getPlayerList();
-			for(FFAPlayer player : players) {
-				if(player.getPlayer().getName().equals(playerName)) {
+			ArrayList<Warrior> players = arena.getPlayerList();
+			for(Warrior player : players) {
+				if(player.getName().equals(playerName)) {
 					return arena;
 				}
 			}

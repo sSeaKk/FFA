@@ -1,5 +1,6 @@
 package mc.sseakk.ffa.game.player;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.util.TextUtil;
@@ -14,13 +15,11 @@ public class Profile{
 				   lema,
 				   ore,
 				   rank;
-	private Player player;
 	private TextComponent playerProfile;
 	
-	public Profile(FFAPlayer ffaplayer) {
-		this.player = ffaplayer.getPlayer();
-		this.lema = "Novato";
+	public Profile(Player player) {
 		this.name = player.getName();
+		this.lema = "Novato";
 		
 		this.playerProfile = new TextComponent(TextUtil.colorText("&c"+name+"&r"));
 		this.playerProfile.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(name + "\n").color(ChatColor.AQUA).append(lema).color(ChatColor.GOLD).create()));

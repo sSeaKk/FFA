@@ -4,7 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Warrior;
 
 public class SoundUtil {
 	
@@ -21,7 +21,7 @@ public class SoundUtil {
 	}
 	
 	public static void killStreakSound(Arena arena, Sound sound) {
-		for(FFAPlayer player : arena.getPlayerList()) {
+		for(Warrior player : arena.getPlayerList()) {
 			player.getPlayer().playSound(player.getPlayer().getLocation(), sound, 10, 1);
 		}
 	}

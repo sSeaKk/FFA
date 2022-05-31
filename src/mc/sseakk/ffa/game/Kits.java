@@ -9,6 +9,7 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
+//TODO: Kits abstract class
 public class Kits {
 	private static String kitName;
 	private static ItemStack item;

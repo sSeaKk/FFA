@@ -7,7 +7,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Warrior;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -23,13 +23,13 @@ public class Arena {
 	private String name;
 	private int currentPlayers;
 	private Location spawn;
-	private ArrayList<FFAPlayer> playerList;
+	private ArrayList<Warrior> playerList;
 	private ArenaStatus status;
 	private Player configurator;
 	private boolean hasFile;
 	
 	public Arena(String name, Player configurator) {
-		this.playerList = new ArrayList<FFAPlayer>();
+		this.playerList = new ArrayList<Warrior>();
 		this.name = name;
 		this.setConfigurator(configurator);
 		this.status = ArenaStatus.DISABLED;
@@ -40,7 +40,7 @@ public class Arena {
 	}
 	
 	public Arena() {
-		this.playerList = new ArrayList<FFAPlayer>();
+		this.playerList = new ArrayList<Warrior>();
 		this.status = ArenaStatus.DISABLED;
 		this.currentPlayers = 0;
 		ArenaScoreboard.initScoreboard(this);
@@ -57,7 +57,17 @@ public class Arena {
 			return;
 		}
 		
-		FFAPlayer fp = new FFAPlayer(player);
+		if(this.status == ArenaStatus.DISABLED) {
+			Messages.sendPlayerMessage(player, "&cLa arena esta desactivada");
+			return;
+		}
+		
+		if(this.status == ArenaStatus.MAINTENANCE) {
+			Messages.sendPlayerMessage(player, "&cLa arena esta en mantenimiento");
+		}
+		
+		FFA.getStatsManager().loadStats(player.getUniqueId());
+		Warrior fp = FFA.getStatsManager().getFromStatsList(player.getName());
 		playerList.add(fp);
 		this.currentPlayers++;
 		player.teleport(spawn);
@@ -66,7 +76,7 @@ public class Arena {
 	}
 	
 	public void removePlayer(Player player) {
-		FFAPlayer fp = getFFAPlayer(player.getName());
+		Warrior fp = getFFAPlayer(player.getName());
 		
 		playerList.remove(fp);
 		this.currentPlayers--;
@@ -75,13 +85,13 @@ public class Arena {
 	
 	public void removePlayers() {
 		while(!playerList.isEmpty()) {
-			FFAPlayer fp = playerList.get(0);
+			Warrior fp = playerList.get(0);
 			fp.removePlayer();
 			playerList.remove(fp);
 		}
 	}
 	
-	public FFAPlayer getFFAPlayer(String playerName) {
+	public Warrior getFFAPlayer(String playerName) {
 		for(int i=0; i<playerList.size(); i++) {
 			if(playerList.get(i).getPlayer().getName().equals(playerName)) {
 				return playerList.get(i);
@@ -90,8 +100,8 @@ public class Arena {
 		return null;
 	}
 	
-	public FFAPlayer getFFAPlayer(Player player) {
-		for(FFAPlayer fplayer : this.playerList) {
+	public Warrior getFFAPlayer(Player player) {
+		for(Warrior fplayer : this.playerList) {
 			if(fplayer.getPlayer().equals(player)) {
 				return fplayer;
 			}
@@ -130,7 +140,7 @@ public class Arena {
 		this.spawn = spawn;
 	}
 
-	public ArrayList<FFAPlayer> getPlayerList() {
+	public ArrayList<Warrior> getPlayerList() {
 		return playerList;
 	}
 
@@ -163,20 +173,20 @@ public class Arena {
 	}
 	
 	public void broadcast(TextComponent... textList) {
-		for(FFAPlayer ffaplayer : this.playerList) {
+		for(Warrior ffaplayer : this.playerList) {
 			Messages.sendPlayerMessage(ffaplayer.getPlayer(), textList);
 		}
 	}
 	
 	public void broadcast(String text) {
-		for(FFAPlayer ffaplayer : this.playerList) {
+		for(Warrior ffaplayer : this.playerList) {
 			Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
 		}
 	}
 	
 	public void broadcastWithout(String text, Player... players) {
 		List<Player> arr = Arrays.asList(players);
-		for(FFAPlayer ffaplayer : this.playerList) {
+		for(Warrior ffaplayer : this.playerList) {
 			if(!arr.contains(ffaplayer.getPlayer())) {
 				Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
 			}
@@ -184,7 +194,7 @@ public class Arena {
 	}
 	
 	public void broadcastWithout(List<Player> players, TextComponent... text){
-		for(FFAPlayer ffaplayer : this.getPlayerList()) {
+		for(Warrior ffaplayer : this.getPlayerList()) {
 			if(!players.contains(ffaplayer.getPlayer())){
 				Messages.sendPlayerMessage(ffaplayer.getPlayer(), text);
 			}

@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.events.PlayerKillDeathEvent;
 import mc.sseakk.ffa.game.events.PlayerKillDeathEvent.DeathCause;
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.player.Warrior;
 import mc.sseakk.ffa.game.player.Stats;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
@@ -27,7 +27,6 @@ import mc.sseakk.ffa.mainpackage.StatsManager;
 import mc.sseakk.ffa.util.TimeUtil;
 
 public class MinecraftListener implements Listener{
-	//TODO:	 Implementar Eventos para detectar acciones de las arenas
 	private ArenasManager am = FFA.getArenasManager();
 	private StatsManager sm = FFA.getStatsManager();
 	
@@ -105,7 +104,7 @@ public class MinecraftListener implements Listener{
 				event.getDrops().clear();
 				event.setDroppedExp(0);
 				
-				FFAPlayer ffaPlayerKilled = arena.getFFAPlayer(playerKilled.getName()),
+				Warrior ffaPlayerKilled = arena.getFFAPlayer(playerKilled.getName()),
 						  ffaPlayerKiller = arena.getFFAPlayer(playerKiller.getName()),
 						  ffaPlayerAssister = null;
 				
@@ -144,7 +143,7 @@ public class MinecraftListener implements Listener{
 			Player playerAssister = null;
 			
 			Arena arena = am.getPlayerArena(player.getName());
-			FFAPlayer ffaPlayerAssister = null;
+			Warrior ffaPlayerAssister = null;
 			
 			try {
 				   playerAssister = assisterMap.get(player).getPlayer();
@@ -207,8 +206,8 @@ public class MinecraftListener implements Listener{
 			Player playerDamaged = (Player) event.getEntity(),
 				   playerDamager = (Player) event.getDamager();
 			
-			Stats damagerStats = sm.getStats(playerDamager.getUniqueId()),
-				  damagedStats = sm.getStats(playerDamaged.getUniqueId());
+			Stats damagerStats = sm.getFromStatsList(playerDamager),
+				  damagedStats = sm.getFromStatsList(playerDamaged);
 			
 			damagerStats.increaseDamageGiven(event.getFinalDamage());
 			damagedStats.increaseDamageTaken(event.getFinalDamage());
