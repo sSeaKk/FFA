@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.game;
+package mc.sseakk.ffa.game.warrior;
 
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;

@@ -18,8 +18,8 @@ import org.bukkit.potion.PotionEffectType;
 
 import mc.sseakk.ffa.game.events.KillStreakEvent;
 import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
-import mc.sseakk.ffa.game.events.PlayerKillDeathEvent;
-import mc.sseakk.ffa.game.events.PlayerKillDeathEvent.DeathCause;
+import mc.sseakk.ffa.game.events.WarriorKillDeathEvent;
+import mc.sseakk.ffa.game.events.WarriorKillDeathEvent.DeathCause;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -29,7 +29,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class ArenaListener implements Listener{
 	private ArenasManager am = FFA.getArenasManager();
-	//TODO; cambiar los parametros de ArenaListener
+	
 	private TextComponent 
 		killTag = TextUtil.stringToTextComponent("&6 [&a+1 &6Asesinato]"),
 		minimalKillTag = TextUtil.stringToTextComponent("&a+1 Asesinato"),
@@ -46,7 +46,7 @@ public class ArenaListener implements Listener{
 		voidDeathMessage = TextUtil.stringToTextComponent(" &6cayo al vacio");
 	
 	@EventHandler
-	public void onPlayerKillDeath(PlayerKillDeathEvent event) {
+	public void onPlayerKillDeath(WarriorKillDeathEvent event) {
 		if(event.getCause() == DeathCause.KILLED) {
 			TextComponent chainer = TextUtil.stringToTextComponent(""),
 						  assisterProfile = TextUtil.stringToTextComponent("");

@@ -13,8 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.Kits;
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 
@@ -50,7 +49,7 @@ public class GeneralListener implements Listener{
 			
 			player.getInventory().clear();
 			player.getEquipment().clear();	
-			Kits.setDefaultKit(player);
+			arena.getWarrior(player).resetKit();
 			
 			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
 				public void run() {

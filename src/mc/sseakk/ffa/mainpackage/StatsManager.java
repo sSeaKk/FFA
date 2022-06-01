@@ -8,26 +8,19 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.util.Messages;
 
 public class StatsManager {
-	private static FileManager fm;
-	private ArrayList<Warrior> gameStats = new ArrayList<Warrior>();
+	private static FileManager fm = FFA.getFileManager();
+	private static ArrayList<Warrior> gameStats = new ArrayList<Warrior>();
 	
-	public StatsManager(){
-		fm = FFA.getFileManager();
+	public static void addToStatsList(Warrior player) {
+		gameStats.add(player);
 	}
 	
-	public void addToStatsList(Warrior player) {
-		this.gameStats.add(player);
-	}
-	
-	public Warrior getFromStatsList(String playerName) {
-		for(Warrior fp : this.gameStats) {
+	public static Warrior getFromStatsList(String playerName) {
+		for(Warrior fp : gameStats) {
 			if(fp.getName().equals(playerName)) {
 				return fp;
 			}
@@ -38,7 +31,7 @@ public class StatsManager {
 	
 	public void saveAllStats() {
 		Messages.infoMessage("Guardando estadisticas");
-		for(Warrior player : this.gameStats) {
+		for(Warrior player : gameStats) {
 			player.saveActualStats();
 			fm.createFile("\\stats", player.getPlayer().getUniqueId().toString());
 			
@@ -75,7 +68,7 @@ public class StatsManager {
 		}
 	}
 	
-	public void loadStats(UUID playerUUID) {
+	public static void loadStats(Warrior warrior) {
 		File folder = fm.getFolder("\\stats");
 		
 		if(folder == null) {
@@ -86,11 +79,7 @@ public class StatsManager {
 		for(File file : folder.listFiles()) {
 			try (Scanner scn = new Scanner(file);){
 				UUID uuid = UUID.fromString(file.getName().replace(".txt", ""));
-				System.out.println(playerUUID.toString());
-				System.out.println(uuid.toString());
-				if(playerUUID.equals(uuid)) {
-					System.out.println("cargando stats de " + Bukkit.getPlayer(uuid).getName());
-					Warrior warrior = new Warrior(FFA.getInstance().getServer().getPlayer(playerUUID));
+				if(warrior.getUUID().equals(uuid)) {
 					while(scn.hasNextLine()) {
 						String line = scn.nextLine(),
 							   value = null;

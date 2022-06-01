@@ -1,6 +1,5 @@
-package mc.sseakk.ffa.game.player;
+package mc.sseakk.ffa.game.warrior;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.util.TextUtil;

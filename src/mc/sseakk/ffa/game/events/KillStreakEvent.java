@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 
 public class KillStreakEvent extends Event{
 	private static final HandlerList handlers = new HandlerList();

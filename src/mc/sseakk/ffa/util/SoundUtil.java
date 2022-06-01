@@ -4,7 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 
 public class SoundUtil {
 	

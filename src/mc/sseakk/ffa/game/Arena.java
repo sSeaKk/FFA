@@ -7,7 +7,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.kits.Default;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -66,8 +67,7 @@ public class Arena {
 			Messages.sendPlayerMessage(player, "&cLa arena esta en mantenimiento");
 		}
 		
-		FFA.getStatsManager().loadStats(player.getUniqueId());
-		Warrior fp = FFA.getStatsManager().getFromStatsList(player.getName());
+		Warrior fp = new Warrior(player, new Default(player));
 		playerList.add(fp);
 		this.currentPlayers++;
 		player.teleport(spawn);
@@ -76,7 +76,7 @@ public class Arena {
 	}
 	
 	public void removePlayer(Player player) {
-		Warrior fp = getFFAPlayer(player.getName());
+		Warrior fp = this.getWarrior(player);
 		
 		playerList.remove(fp);
 		this.currentPlayers--;
@@ -91,7 +91,7 @@ public class Arena {
 		}
 	}
 	
-	public Warrior getFFAPlayer(String playerName) {
+	public Warrior getWarrior(String playerName) {
 		for(int i=0; i<playerList.size(); i++) {
 			if(playerList.get(i).getPlayer().getName().equals(playerName)) {
 				return playerList.get(i);
@@ -100,7 +100,7 @@ public class Arena {
 		return null;
 	}
 	
-	public Warrior getFFAPlayer(Player player) {
+	public Warrior getWarrior(Player player) {
 		for(Warrior fplayer : this.playerList) {
 			if(fplayer.getPlayer().equals(player)) {
 				return fplayer;

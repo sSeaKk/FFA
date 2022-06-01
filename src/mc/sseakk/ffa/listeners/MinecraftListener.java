@@ -17,18 +17,16 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.events.PlayerKillDeathEvent;
-import mc.sseakk.ffa.game.events.PlayerKillDeathEvent.DeathCause;
-import mc.sseakk.ffa.game.player.Warrior;
-import mc.sseakk.ffa.game.player.Stats;
+import mc.sseakk.ffa.game.events.WarriorKillDeathEvent;
+import mc.sseakk.ffa.game.events.WarriorKillDeathEvent.DeathCause;
+import mc.sseakk.ffa.game.kits.Default;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
-import mc.sseakk.ffa.mainpackage.StatsManager;
 import mc.sseakk.ffa.util.TimeUtil;
 
 public class MinecraftListener implements Listener{
 	private ArenasManager am = FFA.getArenasManager();
-	private StatsManager sm = FFA.getStatsManager();
 	
 	private Map<Player, DamageCause> lastDamage = new HashMap<Player, DamageCause>();
 	
@@ -43,27 +41,22 @@ public class MinecraftListener implements Listener{
 	private Map<Assister, Long> assisterCooldown = new HashMap<Assister, Long>();
 	
 	//Assister Class
-	private static class Assister{
-		private Player player;
-		private double damageGiven;
+	private static class Assister extends Warrior{
 		private static ArrayList<Assister> posibleAssistersList = new ArrayList<Assister>();
+		private double damage;
 		
 		private Assister(Player player) {
+			super(player, new Default(player));
 			this.player = player;
-			this.damageGiven = 0;
 			posibleAssistersList.add(this);
 		}
 		
-		private void increaseDamageGiven(double damage) {
-			this.damageGiven += damage;
-		}
-		
-		private String getName() {
-			return player.getName();
+		public void increaseDamageGiven(double damage) {
+			this.damage += damage;
 		}
 		
 		private double getDamage() {
-			return damageGiven;
+			return damage;
 		}
 		
 		private static Assister getPosibleAssister(Player player) {
@@ -80,10 +73,6 @@ public class MinecraftListener implements Listener{
 			if(getPosibleAssister(player) != null) {
 				posibleAssistersList.remove(getPosibleAssister(player));
 			}
-		}
-
-		public Player getPlayer() {
-			return this.player;
 		}
 	}
 	
@@ -104,9 +93,9 @@ public class MinecraftListener implements Listener{
 				event.getDrops().clear();
 				event.setDroppedExp(0);
 				
-				Warrior ffaPlayerKilled = arena.getFFAPlayer(playerKilled.getName()),
-						  ffaPlayerKiller = arena.getFFAPlayer(playerKiller.getName()),
-						  ffaPlayerAssister = null;
+				Warrior warriorKilled = arena.getWarrior(playerKilled.getName()),
+						warriorKiller = arena.getWarrior(playerKiller.getName()),
+						warriorAssister = null;
 				
 				Assister assister = assisterMap.get(playerKilled);
 				
@@ -114,19 +103,19 @@ public class MinecraftListener implements Listener{
 					//Player Assist
 					if(playerKiller != playerAssister) {
 						if(assisterCooldown.get(assister) > TimeUtil.currentTime()) {
-							ffaPlayerAssister = arena.getFFAPlayer(playerAssister.getName());
+							warriorAssister = arena.getWarrior(playerAssister.getName());
 						}
 					}
 					
-					FFA.getPluginManager().callEvent(new PlayerKillDeathEvent(arena, DeathCause.KILLED, ffaPlayerKiller, ffaPlayerKilled, ffaPlayerAssister));
+					FFA.getPluginManager().callEvent(new WarriorKillDeathEvent(arena, DeathCause.KILLED, warriorKiller, warriorKilled, warriorAssister));
 				} else if(lastDamage.get(playerKilled) == DamageCause.FALL) {
 					if(enderPearlThrowers.contains(playerKilled) && enderPearlDeathCooldown.containsKey(playerKilled) && enderPearlDeathCooldown.get(playerKilled) > TimeUtil.currentTime()) {
-						FFA.getPluginManager().callEvent(new PlayerKillDeathEvent(arena, DeathCause.ENDERPEARL, ffaPlayerKiller, ffaPlayerKilled, ffaPlayerAssister));
+						FFA.getPluginManager().callEvent(new WarriorKillDeathEvent(arena, DeathCause.ENDERPEARL, warriorKiller, warriorKilled, warriorAssister));
 					} else {
-						FFA.getPluginManager().callEvent(new PlayerKillDeathEvent(arena, DeathCause.FALL, ffaPlayerKiller, ffaPlayerKilled, ffaPlayerAssister));
+						FFA.getPluginManager().callEvent(new WarriorKillDeathEvent(arena, DeathCause.FALL, warriorKiller, warriorKilled, warriorAssister));
 					}
 				} else if(lastDamage.get(playerKilled) == DamageCause.VOID){
-					FFA.getPluginManager().callEvent(new PlayerKillDeathEvent(arena, DeathCause.VOID, ffaPlayerKiller, ffaPlayerKilled, ffaPlayerAssister));
+					FFA.getPluginManager().callEvent(new WarriorKillDeathEvent(arena, DeathCause.VOID, warriorKiller, warriorKilled, warriorAssister));
 				}
 			}
 			
@@ -143,7 +132,7 @@ public class MinecraftListener implements Listener{
 			Player playerAssister = null;
 			
 			Arena arena = am.getPlayerArena(player.getName());
-			Warrior ffaPlayerAssister = null;
+			Warrior warriorAssister = null;
 			
 			try {
 				   playerAssister = assisterMap.get(player).getPlayer();
@@ -168,7 +157,7 @@ public class MinecraftListener implements Listener{
 					if(lastDamagerPlayer != playerAssister) {
 						Assister assister = assisterMap.get(player);
 						if(assisterCooldown.get(assister) > TimeUtil.currentTime()) {
-							ffaPlayerAssister = arena.getFFAPlayer(assister.getPlayer().getName());
+							warriorAssister = arena.getWarrior(assister.getPlayer().getName());
 						}
 					}
 					
@@ -195,7 +184,7 @@ public class MinecraftListener implements Listener{
 				}
 			}
 			
-			FFA.getPluginManager().callEvent(new PlayerKillDeathEvent(arena, cause, arena.getFFAPlayer(lastDamagerPlayer), arena.getFFAPlayer(player.getName()), ffaPlayerAssister));
+			FFA.getPluginManager().callEvent(new WarriorKillDeathEvent(arena, cause, arena.getWarrior(lastDamagerPlayer), arena.getWarrior(player), warriorAssister));
 			return;
 		}
 	}
@@ -206,8 +195,10 @@ public class MinecraftListener implements Listener{
 			Player playerDamaged = (Player) event.getEntity(),
 				   playerDamager = (Player) event.getDamager();
 			
-			Stats damagerStats = sm.getFromStatsList(playerDamager),
-				  damagedStats = sm.getFromStatsList(playerDamaged);
+			Arena arena = am.getArena(playerDamaged.getName());
+			
+			Warrior damagerStats = arena.getWarrior(playerDamager),
+				    damagedStats = arena.getWarrior(playerDamaged);
 			
 			damagerStats.increaseDamageGiven(event.getFinalDamage());
 			damagedStats.increaseDamageTaken(event.getFinalDamage());

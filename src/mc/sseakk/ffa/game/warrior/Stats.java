@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.game.player;
+package mc.sseakk.ffa.game.warrior;
 
 public interface Stats{
 

@@ -12,7 +12,7 @@ import org.bukkit.World;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;

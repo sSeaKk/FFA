@@ -1,4 +1,6 @@
-package mc.sseakk.ffa.game.player;
+package mc.sseakk.ffa.game.warrior;
+
+import java.util.UUID;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -10,10 +12,11 @@ import org.bukkit.scoreboard.Scoreboard;
 
 import mc.sseakk.ffa.game.ArenaScoreboard;
 import mc.sseakk.ffa.game.Kits;
-import mc.sseakk.ffa.game.StoredElements;
 import mc.sseakk.ffa.game.events.KillStreakEvent;
 import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
+import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.mainpackage.FFA;
+import mc.sseakk.ffa.mainpackage.StatsManager;
 
 public class Warrior extends Profile implements Stats{
 	
@@ -25,8 +28,9 @@ public class Warrior extends Profile implements Stats{
 	private static PotionEffect spawnPotionEffect;
 	private Scoreboard previousScoreboard;
 	private Profile profile = null;
+	private Kits kit;
 	
-	public int kills = 0,
+	protected int kills = 0,
 				  deaths = 0,
 				  assists = 0,
 				  killStreak = 0, 
@@ -41,56 +45,47 @@ public class Warrior extends Profile implements Stats{
 				   maxDamageGiven = 0.0,
 				   maxDamageTaken = 0.0;
 	
-	public Warrior(Player player) {
+	public Warrior(Player player, Kits kit) {
 		super(player);
 		
-		//if(this.offplayer.isOnline()) {
-			this.player = player;
-			this.stored = new StoredElements(
-					this.player.getInventory().getContents(),
-					this.player.getInventory().getArmorContents(),
-					this.player.getGameMode(),
-					this.player.getExp(),
-					this.player.getLevel(),
-					this.player.getFoodLevel(),
-					this.player.getHealth(),
-					this.player.getMaxHealth());
+		this.player = player;
+		this.stored = new StoredElements(
+				this.player.getInventory().getContents(),
+				this.player.getInventory().getArmorContents(),
+				this.player.getGameMode(),
+				this.player.getExp(),
+				this.player.getLevel(),
+				this.player.getFoodLevel(),
+				this.player.getHealth(),
+				this.player.getMaxHealth());
 			
-			this.previousLocation = this.player.getLocation();
-			this.previousScoreboard = this.player.getScoreboard();
+		this.previousLocation = this.player.getLocation();
+		this.previousScoreboard = this.player.getScoreboard();
 			
-			this.flying = this.player.isFlying();
-			spawnPotionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
+		this.flying = this.player.isFlying();
+		spawnPotionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
 			
-			this.player.setFoodLevel(20);
-			this.player.setHealth(20);
-			this.player.setGameMode(GameMode.SURVIVAL);
-
-			this.player.addPotionEffect(spawnPotionEffect);
+		this.player.setFoodLevel(20);
+		this.player.setHealth(20);
+		this.player.setGameMode(GameMode.SURVIVAL);
 			
-			this.player.getInventory().clear();
-			this.player.getEquipment().clear();
-			Kits.setDefaultKit(this.player);
+		this.player.addPotionEffect(spawnPotionEffect);
 			
-			this.previousLocation = this.player.getLocation();
-			this.previousScoreboard = this.player.getScoreboard();
-			
-			this.flying = this.player.isFlying();
-			spawnPotionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
-			
-			this.player.setFoodLevel(20);
-			this.player.setHealth(20);
-			this.player.setGameMode(GameMode.SURVIVAL);
-			
-			this.player.addPotionEffect(spawnPotionEffect);
-			
-			this.player.getInventory().clear();
-			this.player.getEquipment().clear();
-			
-			ArenaScoreboard.updateStatsScoreboard(this);
-		//}
+		this.player.getInventory().clear();
+		this.player.getEquipment().clear();
+		this.kit = new Default(this.player);
+		
+		StatsManager.loadStats(this);
+		ArenaScoreboard.updateStatsScoreboard(this);
 	}
 	
+	public Warrior(Player player) {
+		super(player);
+		this.player = player;
+		StatsManager.loadStats(this);
+	}
+	
+	//TODO: Arreglar bug (no guarda inventario anterior)
 	public void removePlayer() {
 		this.player.getEquipment().clear();
 		this.player.getEquipment().setArmorContents(this.stored.getStoredArmor());
@@ -379,5 +374,21 @@ public class Warrior extends Profile implements Stats{
 		if(this.killStreak == 30) {
 			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.thirtyKS));
 		}
+	}
+
+	public Kits getKit() {
+		return kit;
+	}
+
+	public void setKit(Kits kit) {
+		this.kit = kit;
+	}
+	
+	public void resetKit() {
+		this.kit.setKit();
+	}
+	
+	public UUID getUUID() {
+		return this.player.getUniqueId();
 	}
 }

@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import mc.sseakk.ffa.game.player.Warrior;
+import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.TextUtil;
 
@@ -39,8 +39,8 @@ public class ArenaScoreboard {
 			String spacebars = "         ";
 			List<String> lines = new ArrayList<String>();
 			
-			
 			obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+			obj.setDisplayName(TextUtil.colorText("&6SpaceMan Network &cFFA"));
 			
 			lines.add(TextUtil.colorText(" "));
 			lines.add(TextUtil.colorText(spacebars+"&6Ping: &7"+ ((CraftPlayer) Bukkit.getPlayer(player.getName())).getHandle().ping+"ms"));
@@ -58,7 +58,6 @@ public class ArenaScoreboard {
 			lines.add(TextUtil.colorText("     "+"&6Damage Taken: &7" + TextUtil.decimalFormat(player.getDamageTaken())));
 			lines.add(TextUtil.colorText("&6---------------------"));
 			
-			obj.setDisplayName(TextUtil.colorText("&6SpaceMan Network &cFFA"));
 			for(int i=0; i<lines.size(); i++) {
 				score = obj.getScore(lines.get(i));
 				score.setScore(lines.size()-(i));
