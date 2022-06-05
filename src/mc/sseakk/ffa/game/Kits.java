@@ -5,7 +5,6 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-//TODO: Kits abstract class
 public abstract class Kits {
 	protected Player player;
 	protected String kitName;

@@ -6,7 +6,7 @@ import org.bukkit.event.HandlerList;
 
 import mc.sseakk.ffa.game.warrior.Warrior;
 
-public class KillStreakEvent extends Event{
+public class WarriorKillStreakEvent extends Event{
 	private static final HandlerList handlers = new HandlerList();
 	
 	public enum KillStreakType{
@@ -22,13 +22,13 @@ public class KillStreakEvent extends Event{
 	private Player player;
 	private KillStreakType type;
 	
-	public KillStreakEvent(Warrior FFAPlayer, KillStreakType type) {
+	public WarriorKillStreakEvent(Warrior FFAPlayer, KillStreakType type) {
 		this.ffaplayer = FFAPlayer;
 		this.player = this.ffaplayer.getPlayer();
 		this.type = type;
 	}
 	
-	public KillStreakEvent(Player player, KillStreakType type) {
+	public WarriorKillStreakEvent(Player player, KillStreakType type) {
 		this.ffaplayer = null;
 		this.player = player;
 		this.type = type;

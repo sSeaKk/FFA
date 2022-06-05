@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
 import mc.sseakk.ffa.game.warrior.Warrior;
+import mc.sseakk.ffa.gui.menu.MainMenu;
 import mc.sseakk.ffa.mainpackage.ArenasManager;
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
@@ -59,6 +60,7 @@ public class FFACommand implements CommandExecutor{
 				if(arena != null){
 					arena.removePlayer(player);
 					Messages.sendPlayerMessage(player, "&6Saliste de " + arena.getName());
+					player.updateInventory();
 					return true;
 				}
 				
@@ -88,6 +90,11 @@ public class FFACommand implements CommandExecutor{
 											     + "\nMax Damage Given: " + TextUtil.decimalFormat(stats.getMaxDamageGiven())
 											     + "\nMax Damage Taken: " + TextUtil.decimalFormat(stats.getMaxDamageTaken()));
 				
+				return true;
+			}
+			
+			if(args[0].equalsIgnoreCase("profile")) {
+				new MainMenu(player);
 				return true;
 			}
 		}

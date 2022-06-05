@@ -1,28 +1,33 @@
-package mc.sseakk.ffa.listeners;
+package mc.sseakk.ffa.mainpackage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mc.sseakk.ffa.game.Arena;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent.DeathCause;
 import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.game.warrior.Warrior;
-import mc.sseakk.ffa.mainpackage.ArenasManager;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.TimeUtil;
 
 public class MinecraftListener implements Listener{
@@ -77,8 +82,8 @@ public class MinecraftListener implements Listener{
 	}
 	
 	@EventHandler
-	public void onKillDeath(EntityDeathEvent event) {
-		if(event.getEntityType().equals(EntityType.PLAYER) && event.getEntity().getKiller() != null) {
+	public void onKillDeath(PlayerDeathEvent event) {
+		if(event.getEntity().getKiller() != null) {
 			Player playerKilled = (Player) event.getEntity(),
 				   playerKiller = event.getEntity().getKiller(),
 				   playerAssister = null;
@@ -99,7 +104,7 @@ public class MinecraftListener implements Listener{
 				
 				Assister assister = assisterMap.get(playerKilled);
 				
-				if(lastDamage.get(playerKilled) == DamageCause.FALL) {
+				if(lastDamage.get(playerKilled) == DamageCause.ENTITY_ATTACK) {
 					//Player Assist
 					if(playerKiller != playerAssister) {
 						if(assisterCooldown.get(assister) > TimeUtil.currentTime()) {
@@ -122,7 +127,7 @@ public class MinecraftListener implements Listener{
 			return;
 		}
 		
-		if(event.getEntityType().equals(EntityType.PLAYER) && am.getPlayerArena(((Player) event.getEntity()).getName()) != null) {
+		if(am.getPlayerArena(event.getEntity().getName()) != null) {
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 			DeathCause cause = null;
@@ -195,7 +200,7 @@ public class MinecraftListener implements Listener{
 			Player playerDamaged = (Player) event.getEntity(),
 				   playerDamager = (Player) event.getDamager();
 			
-			Arena arena = am.getArena(playerDamaged.getName());
+			Arena arena = am.getPlayerArena(playerDamaged.getName());
 			
 			Warrior damagerStats = arena.getWarrior(playerDamager),
 				    damagedStats = arena.getWarrior(playerDamaged);
@@ -307,5 +312,81 @@ public class MinecraftListener implements Listener{
 		}
 		
 		return;
+	}
+	
+	@EventHandler
+	public void onBreakBlock(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		
+		if(am.getPlayerArena(player.getName()) != null) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onFoodDrop(FoodLevelChangeEvent event) {
+		Player player = (Player) event.getEntity();
+		
+		if(am.getPlayerArena(player.getName()) != null) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onRespawn(PlayerRespawnEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = am.getPlayerArena(player.getName());
+		Location spawnpoint = event.getRespawnLocation();
+		
+		if(arena != null) {
+			event.setRespawnLocation(arena.getSpawn());
+			
+			player.getInventory().clear();
+			player.getEquipment().clear();	
+			arena.getWarrior(player.getName()).reset();
+			
+			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+				public void run() {
+					player.addPotionEffect(Warrior.getSpawnPotionEffect());
+				}
+			}, 1L);
+		} else {
+			event.setRespawnLocation(spawnpoint);
+		}
+	}
+	
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = am.getPlayerArena(player.getName());
+		
+		if(arena != null) {
+			arena.removePlayer(player);
+		}
+	}
+	
+	@EventHandler
+	public void onItemDrop(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		Arena arena = am.getPlayerArena(player.getName());
+		
+		if(arena != null) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler
+	public void onDeath(PlayerDeathEvent event) {
+		Player player = event.getEntity();
+		
+		if(am.getPlayerArena(player.getName()) != null) {
+			Bukkit.getScheduler().runTaskLater(FFA.getInstance(), new Runnable() {
+				public void run() {
+					event.getDrops().clear();
+					event.setDroppedExp(0);
+					player.spigot().respawn();
+				}
+			}, 20L);
+		}
 	}
 }

@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
+
 import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.util.Messages;
 
-public class StatsManager {
+public class WarriorManager {
 	private static FileManager fm = FFA.getFileManager();
 	private static ArrayList<Warrior> gameStats = new ArrayList<Warrior>();
 	
@@ -19,14 +21,14 @@ public class StatsManager {
 		gameStats.add(player);
 	}
 	
-	public static Warrior getFromStatsList(String playerName) {
+	public static Warrior get(String playerName) {
 		for(Warrior fp : gameStats) {
 			if(fp.getName().equals(playerName)) {
 				return fp;
 			}
 		}
 		
-		return null;
+		return new Warrior(Bukkit.getPlayer(playerName));
 	}
 	
 	public void saveAllStats() {
@@ -68,7 +70,7 @@ public class StatsManager {
 		}
 	}
 	
-	public static void loadStats(Warrior warrior) {
+	public static boolean load(Warrior warrior) {
 		File folder = fm.getFolder("\\stats");
 		
 		if(folder == null) {
@@ -122,8 +124,10 @@ public class StatsManager {
 					scn.close();
 					warrior.calculateRatios();
 					addToStatsList(warrior);
+					return true;
 				}
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
+		return false;
 	}
 }

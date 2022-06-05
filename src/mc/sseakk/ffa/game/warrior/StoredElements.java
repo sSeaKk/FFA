@@ -3,87 +3,36 @@ package mc.sseakk.ffa.game.warrior;
 import org.bukkit.GameMode;
 import org.bukkit.inventory.ItemStack;
 
-public class StoredElements {
+public interface StoredElements {
+	public ItemStack[] getStoredInventory();
+
+	public void setStoredInventory(ItemStack[] storedInventory);
+
+	public ItemStack[] getStoredArmor();
+
+	public void setStoredArmort(ItemStack[] storedEquipment);
+
+	public GameMode getGamemode();
+
+	public void setGamemode(GameMode gamemode);
+
+	public float getStoredExp();
 	
-	private ItemStack[] storedInventory, storedArmor;
-	private GameMode gamemode;
-	private float storedExp;
-	private int storedLevel, storedHunger;
-	private double storedHealth, storedMaxHealth;
-	
-	public StoredElements(ItemStack[] storedInventory, ItemStack[] storedArmor, GameMode gamemode, float storedExp,
-			int storedLevel, int storedHunger, double storedHealth, double storedMaxHealth) {
-		this.storedInventory = storedInventory;
-		this.storedArmor = storedArmor;
-		this.gamemode = gamemode;
-		this.storedExp = storedExp;
-		this.storedLevel = storedLevel;
-		this.storedHunger = storedHunger;
-		this.storedHealth = storedHealth;
-		this.storedMaxHealth = storedMaxHealth;
-	}
+	public void setStoredExp(float storedExp);
 
-	public ItemStack[] getStoredInventory() {
-		return storedInventory;
-	}
+	public int getStoredLevel();
 
-	public void setStoredInventory(ItemStack[] storedInventory) {
-		this.storedInventory = storedInventory;
-	}
+	public void setStoredLevel(int storedLevel);
 
-	public ItemStack[] getStoredArmor() {
-		return storedArmor;
-	}
+	public int getStoredHunger();
 
-	public void setStoredArmort(ItemStack[] storedEquipment) {
-		this.storedArmor = storedEquipment;
-	}
+	public void setStoredHunger(int storedHunger);
 
-	public GameMode getGamemode() {
-		return gamemode;
-	}
+	public double getStoredHealth();
 
-	public void setGamemode(GameMode gamemode) {
-		this.gamemode = gamemode;
-	}
+	public void setStoredHealth(double storedHealth);
 
-	public float getStoredExp() {
-		return storedExp;
-	}
+	public double getStoredMaxHealth();
 
-	public void setStoredExp(float storedExp) {
-		this.storedExp = storedExp;
-	}
-
-	public int getStoredLevel() {
-		return storedLevel;
-	}
-
-	public void setStoredLevel(int storedLevel) {
-		this.storedLevel = storedLevel;
-	}
-
-	public int getStoredHunger() {
-		return storedHunger;
-	}
-
-	public void setStoredHunger(int storedHunger) {
-		this.storedHunger = storedHunger;
-	}
-
-	public double getStoredHealth() {
-		return storedHealth;
-	}
-
-	public void setStoredHealth(double storedHealth) {
-		this.storedHealth = storedHealth;
-	}
-
-	public double getStoredMaxHealth() {
-		return storedMaxHealth;
-	}
-
-	public void setStoredMaxHealth(double storedMaxHealth) {
-		this.storedMaxHealth = storedMaxHealth;
-	}
+	public void setStoredMaxHealth(double storedMaxHealth);
 }

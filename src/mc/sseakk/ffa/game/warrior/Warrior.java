@@ -6,19 +6,21 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import mc.sseakk.ffa.game.ArenaScoreboard;
 import mc.sseakk.ffa.game.Kits;
-import mc.sseakk.ffa.game.events.KillStreakEvent;
-import mc.sseakk.ffa.game.events.KillStreakEvent.KillStreakType;
+import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
+import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.mainpackage.FFA;
-import mc.sseakk.ffa.mainpackage.StatsManager;
+import mc.sseakk.ffa.mainpackage.WarriorManager;
+import mc.sseakk.ffa.util.Messages;
 
-public class Warrior extends Profile implements Stats{
+public class Warrior extends Profile implements Stats, StoredElements{
 	
 	private OfflinePlayer offplayer;
 	protected Player player;
@@ -45,20 +47,29 @@ public class Warrior extends Profile implements Stats{
 				   maxDamageGiven = 0.0,
 				   maxDamageTaken = 0.0;
 	
+	private ItemStack[] storedInventory;
+	private ItemStack[] storedArmor;
+	private GameMode gamemode;
+	private float storedExp;
+	private int storedLevel;
+	private int storedHunger;
+	private double storedHealth;
+	private double storedMaxHealth;
+	
 	public Warrior(Player player, Kits kit) {
 		super(player);
-		
 		this.player = player;
-		this.stored = new StoredElements(
-				this.player.getInventory().getContents(),
-				this.player.getInventory().getArmorContents(),
-				this.player.getGameMode(),
-				this.player.getExp(),
-				this.player.getLevel(),
-				this.player.getFoodLevel(),
-				this.player.getHealth(),
-				this.player.getMaxHealth());
-			
+		
+		this.storedInventory = this.player.getInventory().getContents();
+		this.storedArmor = this.player.getInventory().getArmorContents();
+		
+		this.gamemode = this.player.getGameMode();
+		this.storedExp = this.player.getExp();
+		this.storedLevel = this.player.getLevel();
+		this.storedHunger = this.player.getFoodLevel();
+		this.storedHealth = this.player.getHealth();
+		this.storedMaxHealth = this.player.getMaxHealth();
+		
 		this.previousLocation = this.player.getLocation();
 		this.previousScoreboard = this.player.getScoreboard();
 			
@@ -68,46 +79,56 @@ public class Warrior extends Profile implements Stats{
 		this.player.setFoodLevel(20);
 		this.player.setHealth(20);
 		this.player.setGameMode(GameMode.SURVIVAL);
-			
+		this.player.setExp(0.9999f);
+		
 		this.player.addPotionEffect(spawnPotionEffect);
 			
 		this.player.getInventory().clear();
 		this.player.getEquipment().clear();
-		this.kit = new Default(this.player);
+		this.kit = kit;
+		this.player.updateInventory();
 		
-		StatsManager.loadStats(this);
+		if(!WarriorManager.load(this)) {
+			Messages.sendPlayerMessage(player, "&4No se pudo cargar tus estadisticas, si crees que esto es un error contacte con un administrador!");
+			Messages.warningMessage("No se pudo cargar las estadisticas de: " + player.getName());
+		}
+		
 		ArenaScoreboard.updateStatsScoreboard(this);
 	}
 	
 	public Warrior(Player player) {
 		super(player);
 		this.player = player;
-		StatsManager.loadStats(this);
+		WarriorManager.load(this);
 	}
 	
-	//TODO: Arreglar bug (no guarda inventario anterior)
 	public void removePlayer() {
+		this.player.updateInventory();
+		
 		this.player.getEquipment().clear();
-		this.player.getEquipment().setArmorContents(this.stored.getStoredArmor());
+		this.player.getEquipment().setArmorContents(this.getStoredArmor());
 		
 		this.player.getInventory().clear();
-		this.player.getInventory().setContents(this.stored.getStoredInventory());
+		this.player.getInventory().setContents(this.getStoredInventory());
 		
-		this.player.setGameMode(this.stored.getGamemode());
-		this.player.setExp(this.stored.getStoredExp());
-		this.player.setLevel(this.stored.getStoredLevel());
-		this.player.setHealth(this.stored.getStoredHealth());
-		this.player.setMaxHealth(this.stored.getStoredMaxHealth());
-		this.player.setFoodLevel(this.stored.getStoredHunger());
+		this.player.setGameMode(this.getGamemode());
+		this.player.setExp(this.getStoredExp());
+		this.player.setLevel(this.getStoredLevel());
+		this.player.setHealth(this.getStoredHealth());
+		this.player.setMaxHealth(this.getStoredMaxHealth());
+		this.player.setFoodLevel(this.getStoredHunger());
 		this.player.setFlying(this.isFlying());
 		this.player.removePotionEffect(spawnPotionEffect.getType());
-		this.player.setExp(0.9999f);
 		
-		this.player.setScoreboard(previousScoreboard);
+		this.player.setScoreboard(this.previousScoreboard);
 		this.player.teleport(this.previousLocation);
-		
 		saveActualStats();
 		resetSessionStats();
+	}
+	
+	public void reset() {
+		this.kit = new Default(this.player);
+		this.player.setExp(0.9999f);
 	}
 	
 	public StoredElements getStored() {
@@ -350,29 +371,29 @@ public class Warrior extends Profile implements Stats{
 
 	@Override
 	public void detectEvents() {
-		if(this.kills == 5) {
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.fiveKS));
+		if(this.killStreak == 5) {
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.fiveKS));
 		}
 		
 		if(this.killStreak == 10) {
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.tenKS));
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.tenKS));
 		}
 		
 		if(this.killStreak == 15) {
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.fifthteenKS));
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.fifthteenKS));
 		}
 		
 		if(this.killStreak == 20) {
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.twentyKS));
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.twentyKS));
 		}
 		
 		if(this.killStreak == 25) {
 			
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.twentyfiveKS));
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.twentyfiveKS));
 		}
 		
 		if(this.killStreak == 30) {
-			FFA.getPluginManager().callEvent(new KillStreakEvent(this, KillStreakType.thirtyKS));
+			FFA.getPluginManager().callEvent(new WarriorKillStreakEvent(this, KillStreakType.thirtyKS));
 		}
 	}
 
@@ -384,11 +405,71 @@ public class Warrior extends Profile implements Stats{
 		this.kit = kit;
 	}
 	
-	public void resetKit() {
-		this.kit.setKit();
-	}
-	
 	public UUID getUUID() {
 		return this.player.getUniqueId();
+	}
+
+	public ItemStack[] getStoredInventory() {
+		return storedInventory;
+	}
+
+	public void setStoredInventory(ItemStack[] storedInventory) {
+		this.storedInventory = storedInventory;
+	}
+
+	public ItemStack[] getStoredArmor() {
+		return storedArmor;
+	}
+
+	public void setStoredArmort(ItemStack[] storedEquipment) {
+		this.storedArmor = storedEquipment;
+	}
+
+	public GameMode getGamemode() {
+		return gamemode;
+	}
+
+	public void setGamemode(GameMode gamemode) {
+		this.gamemode = gamemode;
+	}
+
+	public float getStoredExp() {
+		return storedExp;
+	}
+
+	public void setStoredExp(float storedExp) {
+		this.storedExp = storedExp;
+	}
+
+	public int getStoredLevel() {
+		return storedLevel;
+	}
+
+	public void setStoredLevel(int storedLevel) {
+		this.storedLevel = storedLevel;
+	}
+
+	public int getStoredHunger() {
+		return storedHunger;
+	}
+
+	public void setStoredHunger(int storedHunger) {
+		this.storedHunger = storedHunger;
+	}
+
+	public double getStoredHealth() {
+		return storedHealth;
+	}
+
+	public void setStoredHealth(double storedHealth) {
+		this.storedHealth = storedHealth;
+	}
+
+	public double getStoredMaxHealth() {
+		return storedMaxHealth;
+	}
+
+	public void setStoredMaxHealth(double storedMaxHealth) {
+		this.storedMaxHealth = storedMaxHealth;
 	}
 }

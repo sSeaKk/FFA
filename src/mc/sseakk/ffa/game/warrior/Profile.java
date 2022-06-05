@@ -10,11 +10,11 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class Profile{
 	
-	private String name,
+	protected String name,
 				   lema,
 				   ore,
 				   rank;
-	private TextComponent playerProfile;
+	protected TextComponent playerProfile;
 	
 	public Profile(Player player) {
 		this.name = player.getName();

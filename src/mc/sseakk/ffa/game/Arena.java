@@ -53,18 +53,14 @@ public class Arena {
 			return;
 		}
 		
-		if(this.spawn == null) {
+		if(!hasSpawn()) {
 			Messages.sendPlayerMessage(player, "&cLa arena no tiene spawn");
 			return;
 		}
 		
-		if(this.status == ArenaStatus.DISABLED) {
-			Messages.sendPlayerMessage(player, "&cLa arena esta desactivada");
+		if(!isEnabled()) {
+			Messages.sendPlayerMessage(player, "&cLa arena esta desactivada o en mantenimiento");
 			return;
-		}
-		
-		if(this.status == ArenaStatus.MAINTENANCE) {
-			Messages.sendPlayerMessage(player, "&cLa arena esta en mantenimiento");
 		}
 		
 		Warrior fp = new Warrior(player, new Default(player));
@@ -111,6 +107,13 @@ public class Arena {
 	
 	public boolean isEnabled() {
 		if(this.status.equals(ArenaStatus.ENABLED)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean hasSpawn() {
+		if(this.spawn != null) {
 			return true;
 		}
 		return false;
