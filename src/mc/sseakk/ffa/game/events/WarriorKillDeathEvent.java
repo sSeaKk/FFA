@@ -4,9 +4,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.player.FFAPlayer;
+import mc.sseakk.ffa.game.warrior.Warrior;
 
-public class PlayerKillDeathEvent extends Event{
+public class WarriorKillDeathEvent extends Event{
 	private static final HandlerList handlers = new HandlerList();
 	
 	public enum DeathCause{
@@ -18,11 +18,11 @@ public class PlayerKillDeathEvent extends Event{
 	
 	private Arena arena;
 	private DeathCause cause;
-	private FFAPlayer killer,
-					  killed,
-					  assister;
+	private Warrior killer,
+					killed,
+				    assister;
 	
-	public PlayerKillDeathEvent(Arena arena, DeathCause cause, FFAPlayer killer, FFAPlayer killed, FFAPlayer assister) {
+	public WarriorKillDeathEvent(Arena arena, DeathCause cause, Warrior killer, Warrior killed, Warrior assister) {
 		this.arena = arena;
 		this.killer = killer;
 		this.killed = killed;
@@ -30,15 +30,15 @@ public class PlayerKillDeathEvent extends Event{
 		this.cause = cause;
 	}
 	
-	public FFAPlayer getKiller() {
+	public Warrior getKiller() {
 		return this.killer;
 	}
 	
-	public FFAPlayer getKilled() {
+	public Warrior getKilled() {
 		return this.killed;
 	}
 	
-	public FFAPlayer getAssister() {
+	public Warrior getAssister() {
 		return this.assister;
 	}
 	
