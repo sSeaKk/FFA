@@ -220,9 +220,10 @@ public class FFACommand implements CommandExecutor{
 		}
 		
 		Messages.sendPlayerMessage(player, "&aComandos de usuario: \n"
-				+ "&6/ffa join <arena>\n"
-				+ "&6/ffa leave\n"
-				+ "&6/ffa stats");
+				+ "&6/ffa join <arena> \n"
+				+ "&6/ffa leave \n"
+				+ "&6/ffa stats \n"
+				+ "&6/ffa profile");
 		return true;
 	}
 }

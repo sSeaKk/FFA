@@ -117,11 +117,11 @@ public class Warrior extends Profile implements Stats, StoredElements{
 		this.player.setHealth(this.getStoredHealth());
 		this.player.setMaxHealth(this.getStoredMaxHealth());
 		this.player.setFoodLevel(this.getStoredHunger());
-		this.player.setFlying(this.isFlying());
 		this.player.removePotionEffect(spawnPotionEffect.getType());
 		
 		this.player.setScoreboard(this.previousScoreboard);
 		this.player.teleport(this.previousLocation);
+		this.player.setFlying(this.isFlying());
 		saveActualStats();
 		resetSessionStats();
 	}
