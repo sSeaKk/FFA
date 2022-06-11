@@ -17,7 +17,7 @@ import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.mainpackage.FFA;
-import mc.sseakk.ffa.mainpackage.WarriorManager;
+import mc.sseakk.ffa.mainpackage.ProfileManager;
 import mc.sseakk.ffa.util.Messages;
 
 public class Warrior extends Profile implements Stats, StoredElements{
@@ -88,7 +88,7 @@ public class Warrior extends Profile implements Stats, StoredElements{
 		this.kit = kit;
 		this.player.updateInventory();
 		
-		if(!WarriorManager.load(this)) {
+		if(!ProfileManager.load(this)) {
 			Messages.sendPlayerMessage(player, "&4No se pudo cargar tus estadisticas, si crees que esto es un error contacte con un administrador!");
 			Messages.warningMessage("No se pudo cargar las estadisticas de: " + player.getName());
 		}
@@ -99,7 +99,7 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	public Warrior(Player player) {
 		super(player);
 		this.player = player;
-		WarriorManager.load(this);
+		ProfileManager.load(this);
 	}
 	
 	public void removePlayer() {

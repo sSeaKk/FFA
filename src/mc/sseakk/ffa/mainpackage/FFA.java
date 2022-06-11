@@ -14,23 +14,25 @@ public class FFA extends JavaPlugin {
 	private static CommandManager cm;
 	private static ArenasManager am;
 	private static EventsManager em;
-	private static WarriorManager wm;
-	private static PluginManager pm;
+	private static ProfileManager pm;
+	private static RewardsManager rm;
+	private static PluginManager plugin;
 	
 	public void onEnable() {
 		Messages.infoMessage("Incializando plugin");
 		instance = this;
-		pm = this.getServer().getPluginManager();
+		plugin = this.getServer().getPluginManager();
 		fm = new FileManager();
 		am = new ArenasManager();
-		wm = new WarriorManager();
+		pm = new ProfileManager();
+		rm = new RewardsManager();
 		em = new EventsManager();
 		cm = new CommandManager();
 		Messages.infoMessage("Plugin inicializado");
 	}
 	
 	public void onDisable() {
-		wm.saveAllStats();
+		pm.saveAllStats();
 		am.saveArenas();
 		Messages.infoMessage("Deshabilitando plugin");
 	}
@@ -59,11 +61,15 @@ public class FFA extends JavaPlugin {
 		return em;
 	}
 
-	public static WarriorManager getWarriorManager() {
-		return wm;
+	public static ProfileManager getProfileManager() {
+		return pm;
 	}
 	
 	public static PluginManager getPluginManager() {
-		return pm;
+		return plugin;
+	}
+
+	public static RewardsManager getRewardsManager() {
+		return rm;
 	}
 }

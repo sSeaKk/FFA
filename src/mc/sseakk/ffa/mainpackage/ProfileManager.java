@@ -11,9 +11,10 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 
 import mc.sseakk.ffa.game.warrior.Warrior;
+import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.util.Messages;
 
-public class WarriorManager {
+public class ProfileManager {
 	private static FileManager fm = FFA.getFileManager();
 	private static ArrayList<Warrior> gameStats = new ArrayList<Warrior>();
 	
@@ -35,12 +36,19 @@ public class WarriorManager {
 		Messages.infoMessage("Guardando estadisticas");
 		for(Warrior player : gameStats) {
 			player.saveActualStats();
-			fm.createFile("\\stats", player.getPlayer().getUniqueId().toString());
+			fm.createFile("\\profile", player.getPlayer().getUniqueId().toString());
 			
 			BufferedWriter writer = fm.getBufferedWriter();
 			
 			try {
 				writer.write("name="+player.getName());
+				writer.newLine();
+				
+				writer.write("level="+player.getLevel());
+				writer.newLine();
+				
+				writer.newLine();
+				writer.write("Stats:");
 				writer.newLine();
 				
 				writer.write("kills="+player.getKills());
@@ -61,7 +69,16 @@ public class WarriorManager {
 				writer.write("maxDamageGiven="+player.getMaxDamageGiven());
 				writer.newLine();
 				
-				writer.write("maxDamageTaken="+player.getDamageTaken());
+				writer.write("maxDamageTaken="+player.getMaxDamageTaken());
+				writer.newLine();
+				
+				writer.newLine();
+				writer.write("Rewards:");
+				writer.newLine();
+				
+				for(Reward reward : player.getPlayerRewards()) {
+					writer.write(reward.getID()+" ");
+				}
 				
 				writer.close();
 			} catch(IOException e) {
@@ -71,11 +88,11 @@ public class WarriorManager {
 	}
 	
 	public static boolean load(Warrior warrior) {
-		File folder = fm.getFolder("\\stats");
+		File folder = fm.getFolder("\\profile");
 		
 		if(folder == null) {
-			fm.createFolder("\\stats");
-			folder = fm.getFolder("\\stats");
+			fm.createFolder("\\profile");
+			folder = fm.getFolder("\\profile");
 		}
 		
 		for(File file : folder.listFiles()) {
@@ -85,6 +102,11 @@ public class WarriorManager {
 					while(scn.hasNextLine()) {
 						String line = scn.nextLine(),
 							   value = null;
+						
+						if(line.startsWith("level")) {
+							value = line.replaceFirst("level=", "");
+							warrior.setKills(Integer.valueOf(value));
+						}
 						
 						if(line.startsWith("kills")) {
 							value = line.replaceFirst("kills=", "");
@@ -119,6 +141,14 @@ public class WarriorManager {
 							value = line.replaceFirst("maxDamageTaken=", "");
 							warrior.setMaxDamageTaken(Double.valueOf(value));
 						}
+						
+						if(line.startsWith("Rewards:")) {
+							if(scn.hasNextLine()) {
+								while(scn.hasNextInt()) {
+									warrior.addReward(FFA.getRewardsManager().getReward(scn.nextInt()));
+								}
+							}
+						}
 					}
 					
 					scn.close();
@@ -129,5 +159,9 @@ public class WarriorManager {
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
 		return false;
+	}
+	
+	public ArrayList<Warrior> getWarriorList(){
+		return this.getWarriorList();
 	}
 }
