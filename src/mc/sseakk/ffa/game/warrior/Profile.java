@@ -1,39 +1,43 @@
 package mc.sseakk.ffa.game.warrior;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.reward.Reward;
+import mc.sseakk.ffa.reward.rewards.Title;
 import mc.sseakk.ffa.util.TextUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class Profile{
+public abstract class Profile{
 	
 	protected String name,
-				   lema,
 				   ore;
-	
 	protected int level,
 			 	  rank;
-	
-	protected TextComponent playerProfile;
-	
+	protected Player player;
+	protected TextComponent textProfile;
+	protected Title title;
 	protected ArrayList<Reward> playerRewards;
 	
 	public Profile(Player player) {
+		this.player = player;
 		this.playerRewards = new ArrayList<Reward>();
+		FFA.getRewardsManager().loadRewards(this);
 		this.name = player.getName();
-		this.lema = "Novato";
+		this.textProfile = new TextComponent(TextUtil.colorText("&c"+name+"&r"));
 		this.level = 0;
+		this.title = null;
 		
-		FFA.getRewardsManager().assignPlayerRewards(this);				
-		this.playerProfile = new TextComponent(TextUtil.colorText("&c"+name+"&r"));
-		this.playerProfile.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(name + "\n").color(ChatColor.AQUA).append(lema).color(ChatColor.GOLD).create()));
+		if(!FFA.getWarriorManager().loadProfile(this)) {
+			FFA.getRewardsManager().assignPlayerRewards(this);
+			setTitle(1);
+		}
 	}
 	
 	public String getName() {
@@ -46,16 +50,16 @@ public class Profile{
 	}
 
 
-	public String getLema() {
-		return lema;
+	public Title getTitle() {
+		return title;
 	}
 
-
-	public void setLema(String lema) {
-		this.lema = lema;
+	public String getTitleText() {
+		return title.getText();
 	}
-
-
+	
+	public abstract void setTitle(int titleID);
+	
 	public String getOre() {
 		return ore;
 	}
@@ -70,13 +74,12 @@ public class Profile{
 		return rank;
 	}
 
-
 	public void setRank(int rank) {
 		this.rank = rank;
 	}
 	
 	public TextComponent getText() {
-		return this.playerProfile;
+		return this.textProfile;
 	}
 	
 	public int getLevel() {
@@ -93,5 +96,16 @@ public class Profile{
 	
 	public ArrayList<Reward> getPlayerRewards(){
 		return this.playerRewards;
+	}
+	
+	public void resetHoverEvent() {
+		this.textProfile.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(name + "\n")
+				.color(ChatColor.AQUA).append(this.title.getText()).color(ChatColor.GOLD).italic(true)
+				.create()));
+		System.out.println(this.textProfile);
+	}
+	
+	public UUID getUUID() {
+		return this.player.getUniqueId();
 	}
 }

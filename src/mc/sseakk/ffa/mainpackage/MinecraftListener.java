@@ -18,6 +18,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType.SlotType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -387,6 +389,15 @@ public class MinecraftListener implements Listener{
 					player.spigot().respawn();
 				}
 			}, 20L);
+		}
+	}
+
+	public void onArmorDrop(InventoryClickEvent event) {
+		Player player = (Player) event.getWhoClicked();
+		Arena arena = am.getPlayerArena(player.getName());
+		
+		if(event.getSlotType() == SlotType.ARMOR && arena != null) {
+			event.setCancelled(true);
 		}
 	}
 }

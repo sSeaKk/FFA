@@ -1,7 +1,5 @@
 package mc.sseakk.ffa.game.warrior;
 
-import java.util.UUID;
-
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -17,13 +15,14 @@ import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.mainpackage.FFA;
-import mc.sseakk.ffa.mainpackage.ProfileManager;
+import mc.sseakk.ffa.reward.Reward;
+import mc.sseakk.ffa.reward.Reward.RewardType;
+import mc.sseakk.ffa.reward.rewards.Title;
 import mc.sseakk.ffa.util.Messages;
 
 public class Warrior extends Profile implements Stats, StoredElements{
 	
 	private OfflinePlayer offplayer;
-	protected Player player;
 	private StoredElements stored;
 	private Location previousLocation;
 	private boolean flying;
@@ -88,18 +87,20 @@ public class Warrior extends Profile implements Stats, StoredElements{
 		this.kit = kit;
 		this.player.updateInventory();
 		
-		if(!ProfileManager.load(this)) {
+		if(!FFA.getWarriorManager().loadStats(this)) {
 			Messages.sendPlayerMessage(player, "&4No se pudo cargar tus estadisticas, si crees que esto es un error contacte con un administrador!");
 			Messages.warningMessage("No se pudo cargar las estadisticas de: " + player.getName());
 		}
 		
 		ArenaScoreboard.updateStatsScoreboard(this);
+		System.out.println(title.getText());
 	}
 	
 	public Warrior(Player player) {
 		super(player);
 		this.player = player;
-		ProfileManager.load(this);
+		FFA.getWarriorManager().saveProfile(this);
+		FFA.getWarriorManager().loadStats(this);
 	}
 	
 	public void removePlayer() {
@@ -129,6 +130,19 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	public void reset() {
 		this.kit = new Default(this.player);
 		this.player.setExp(0.9999f);
+	}
+	
+	public void setTitle(int titleID) {
+		System.out.println(titleID);
+		for(Reward reward : this.playerRewards) {
+			System.out.println("reward id: " +reward.getID());
+			if(reward.getType() == RewardType.TITLE && reward.getID() == titleID) {
+				this.title = (Title) reward;
+				System.out.println("seteando title: "+ title.getID());
+				FFA.getWarriorManager().saveProfile(this);
+				super.resetHoverEvent();
+			}
+		}
 	}
 	
 	public StoredElements getStored() {
@@ -403,10 +417,6 @@ public class Warrior extends Profile implements Stats, StoredElements{
 
 	public void setKit(Kits kit) {
 		this.kit = kit;
-	}
-	
-	public UUID getUUID() {
-		return this.player.getUniqueId();
 	}
 
 	public ItemStack[] getStoredInventory() {

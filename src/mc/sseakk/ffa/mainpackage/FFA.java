@@ -14,7 +14,7 @@ public class FFA extends JavaPlugin {
 	private static CommandManager cm;
 	private static ArenasManager am;
 	private static EventsManager em;
-	private static ProfileManager pm;
+	private static WarriorManager wm;
 	private static RewardsManager rm;
 	private static PluginManager plugin;
 	
@@ -24,7 +24,7 @@ public class FFA extends JavaPlugin {
 		plugin = this.getServer().getPluginManager();
 		fm = new FileManager();
 		am = new ArenasManager();
-		pm = new ProfileManager();
+		wm = new WarriorManager();
 		rm = new RewardsManager();
 		em = new EventsManager();
 		cm = new CommandManager();
@@ -32,7 +32,8 @@ public class FFA extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		pm.saveAllStats();
+		wm.saveAllStats();
+		wm.saveAllProfiles();
 		am.saveArenas();
 		Messages.infoMessage("Deshabilitando plugin");
 	}
@@ -61,8 +62,8 @@ public class FFA extends JavaPlugin {
 		return em;
 	}
 
-	public static ProfileManager getProfileManager() {
-		return pm;
+	public static WarriorManager getWarriorManager() {
+		return wm;
 	}
 	
 	public static PluginManager getPluginManager() {

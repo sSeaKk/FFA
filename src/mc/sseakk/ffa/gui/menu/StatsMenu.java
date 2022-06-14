@@ -10,6 +10,7 @@ import mc.sseakk.ffa.gui.Menu;
 public class StatsMenu extends Menu{
 	public StatsMenu(Player player) {
 		super(player, "Estadisticas", 36);
+		addOpenedMenuToPlayer(player, this);
 		
 		createIcon("&6Kills", 11,
 					 new ItemStack(Material.DIAMOND_SWORD, 1), 

@@ -4,11 +4,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public abstract class Kits {
 	protected Player player;
 	protected String kitName;
 	protected static ItemStack item;
+	protected static ItemMeta meta;
 	protected static PlayerInventory inventario;
 	protected static EntityEquipment armadura;
 	

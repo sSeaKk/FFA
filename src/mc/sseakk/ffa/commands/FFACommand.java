@@ -69,32 +69,39 @@ public class FFACommand implements CommandExecutor{
 			}
 			
 			if(args[0].equalsIgnoreCase("stats")) {
-				if(am.getPlayerArena(player.getName()) == null) {
-					Messages.sendPlayerMessage(player, "&cNo estas en una arena!");
+				Arena arena = FFA.getArenasManager().getPlayerArena(player.getName());
+				if(arena != null) {
+					Warrior stats = FFA.getWarriorManager().get(player.getName());
+					Messages.sendPlayerMessage(player, "&6Estadisticas:"
+													 + "\nAsesinatos: " + stats.getKills()
+													 + "\nMuertes: " + stats.getDeaths()
+													 + "\nAsistencias: " + stats.getAssists()
+													 + "\n"
+													 + "\nKDA: " + stats.getKdaRatio()
+													 + "\nKDR: " + stats.getKdRatio()
+													 + "\n"
+													 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
+													 + "\nDeath Streak: " + stats.getDeathStreak()
+													 + "\nMax Death Streak: " + stats.getMaxDeathStreak()
+												     + "\n"
+												     + "\nMax Damage Given: " + TextUtil.decimalFormat(stats.getMaxDamageGiven())
+												     + "\nMax Damage Taken: " + TextUtil.decimalFormat(stats.getMaxDamageTaken()));
+					
 					return true;
 				}
 				
-				Warrior stats = am.getPlayerArena(player.getName()).getWarrior(player);
-				Messages.sendPlayerMessage(player, "&6Estadisticas:"
-												 + "\nAsesinatos: " + stats.getKills()
-												 + "\nMuertes: " + stats.getDeaths()
-												 + "\nAsistencias: " + stats.getAssists()
-												 + "\n"
-												 + "\nKDA: " + stats.getKdaRatio()
-												 + "\nKDR: " + stats.getKdRatio()
-												 + "\n"
-												 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
-												 + "\nDeath Streak: " + stats.getDeathStreak()
-												 + "\nMax Death Streak: " + stats.getMaxDeathStreak()
-											     + "\n"
-											     + "\nMax Damage Given: " + TextUtil.decimalFormat(stats.getMaxDamageGiven())
-											     + "\nMax Damage Taken: " + TextUtil.decimalFormat(stats.getMaxDamageTaken()));
-				
+				Messages.sendPlayerMessage(player, "&cNo estas en una arena");
 				return true;
 			}
 			
 			if(args[0].equalsIgnoreCase("profile")) {
-				new MainMenu(player);
+				Arena arena = FFA.getArenasManager().getPlayerArena(player.getName());
+				if(arena != null) {
+					new MainMenu(player);
+					return true;
+				}
+				
+				Messages.sendPlayerMessage(player, "&cNo estas en una arena");
 				return true;
 			}
 		}

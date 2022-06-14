@@ -25,28 +25,38 @@ public class Default extends Kits{
 			public void run() {
 				player.updateInventory();
 				item = new ItemStack(Material.DIAMOND_HELMET);
+				meta = item.getItemMeta();
+				meta.spigot().setUnbreakable(true);
+				item.setItemMeta(meta);
 				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-				item.addEnchantment(Enchantment.DURABILITY, 3);
 				armadura.setHelmet(item);
 		
 				item = new ItemStack(Material.DIAMOND_CHESTPLATE);
+				meta = item.getItemMeta();
+				meta.spigot().setUnbreakable(true);
+				item.setItemMeta(meta);
 				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-				item.addEnchantment(Enchantment.DURABILITY, 3);
 				armadura.setChestplate(item);
 				
 				item = new ItemStack(Material.DIAMOND_LEGGINGS);
+				meta = item.getItemMeta();
+				meta.spigot().setUnbreakable(true);
+				item.setItemMeta(meta);
 				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-				item.addEnchantment(Enchantment.DURABILITY, 3);
 				armadura.setLeggings(item);
 		
 				item = new ItemStack(Material.DIAMOND_BOOTS);
+				meta = item.getItemMeta();
+				meta.spigot().setUnbreakable(true);
+				item.setItemMeta(meta);
 				item.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-				item.addEnchantment(Enchantment.DURABILITY, 3);
 				armadura.setBoots(item);
 		
 				item = new ItemStack(Material.DIAMOND_SWORD);
+				meta = item.getItemMeta();
+				meta.spigot().setUnbreakable(true);
+				item.setItemMeta(meta);
 				item.addEnchantment(Enchantment.DAMAGE_ALL, 2);
-				item.addEnchantment(Enchantment.DURABILITY, 3);
 				inventario.setItem(0, item);
 		
 				item = new ItemStack(Material.ENDER_PEARL, 16);
