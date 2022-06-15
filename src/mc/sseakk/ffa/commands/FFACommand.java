@@ -5,12 +5,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import mc.sseakk.ffa.ArenasManager;
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.Arena;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.gui.menu.MainMenu;
-import mc.sseakk.ffa.mainpackage.ArenasManager;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 import mc.sseakk.ffa.util.TextUtil;
 
@@ -80,8 +80,8 @@ public class FFACommand implements CommandExecutor{
 													 + "\nKDA: " + stats.getKdaRatio()
 													 + "\nKDR: " + stats.getKdRatio()
 													 + "\n"
-													 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
 													 + "\nDeath Streak: " + stats.getDeathStreak()
+													 + "\nMax Kill Streak: " + stats.getMaxKillStreak()
 													 + "\nMax Death Streak: " + stats.getMaxDeathStreak()
 												     + "\n"
 												     + "\nMax Damage Given: " + TextUtil.decimalFormat(stats.getMaxDamageGiven())

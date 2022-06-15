@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
-import mc.sseakk.ffa.game.warrior.Profile;
+import mc.sseakk.ffa.game.Profile;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.Reward.RewardRarity;
 import mc.sseakk.ffa.reward.rewards.Title;
@@ -25,7 +25,8 @@ public class RewardsManager {
 		createTitle("Novato", RewardRarity.COMMON, 0);
 		createTitle("Peleador", RewardRarity.COMMON, 0);
 		createTitle("Asesino", RewardRarity.COMMON, 0);
-		createTitle("Promesa", RewardRarity.COMMON, 2);
+		createTitle("Invencible", RewardRarity.COMMON, 2);
+		createTitle("Promesa", RewardRarity.RARE, 5);
 	}
 	
 	public static void createTitle(String title, RewardRarity rarity, int level) {
@@ -84,9 +85,7 @@ public class RewardsManager {
 						if(line.startsWith("Rewards:")) {
 							if(scn.hasNextLine()) {
 								while(scn.hasNextInt()) {
-									int id = scn.nextInt();
-									System.out.println("añadiendo reward id: "+ id);
-									profile.addReward(FFA.getRewardsManager().getReward(id));
+									profile.addReward(FFA.getRewardsManager().getReward(scn.nextInt()));
 								} 
 							} else {
 								assignPlayerRewards(profile);

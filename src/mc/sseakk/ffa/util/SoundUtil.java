@@ -4,7 +4,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import mc.sseakk.ffa.game.Arena;
-import mc.sseakk.ffa.game.warrior.Warrior;
+import mc.sseakk.ffa.game.Warrior;
 
 public class SoundUtil {
 	
@@ -24,5 +24,13 @@ public class SoundUtil {
 		for(Warrior player : arena.getPlayerList()) {
 			player.getPlayer().playSound(player.getPlayer().getLocation(), sound, 10, 1);
 		}
+	}
+	
+	public static void confirmSound(Player player) {
+		player.playSound(player.getLocation(), Sound.ORB_PICKUP, 10, 1);
+	}
+	
+	public static void rejectSound(Player player) {
+		player.playSound(player.getLocation(), Sound.SILVERFISH_KILL, 10, 1);
 	}
 }

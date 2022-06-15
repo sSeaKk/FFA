@@ -1,6 +1,6 @@
 package mc.sseakk.ffa.reward.rewards;
 
-import mc.sseakk.ffa.mainpackage.RewardsManager;
+import mc.sseakk.ffa.RewardsManager;
 import mc.sseakk.ffa.reward.Reward;
 
 public class Title extends Reward{

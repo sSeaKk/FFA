@@ -14,9 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import mc.sseakk.ffa.game.warrior.Warrior;
+import mc.sseakk.ffa.FFA;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.gui.menu.MainMenu;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.TextUtil;
 import net.md_5.bungee.api.ChatColor;
 

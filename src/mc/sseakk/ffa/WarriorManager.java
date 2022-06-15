@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-
-import mc.sseakk.ffa.game.warrior.Profile;
-import mc.sseakk.ffa.game.warrior.Warrior;
+import mc.sseakk.ffa.game.Profile;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.util.Messages;
 
@@ -30,9 +28,7 @@ public class WarriorManager {
 			}
 		}
 		
-		Warrior w = new Warrior(Bukkit.getPlayer(playerName));
-		warriorLoadedList.add(w);
-		return w;
+		return null;
 	}
 	
 	public Warrior get(UUID uuid) {
@@ -80,7 +76,6 @@ public class WarriorManager {
 				writer.newLine();
 				
 				writer.write("maxDamageTaken="+player.getMaxDamageTaken());
-				writer.newLine();
 				
 				writer.close();
 			} catch(IOException e) {
@@ -91,6 +86,10 @@ public class WarriorManager {
 	
 	public boolean loadStats(Warrior warrior) {
 		File folder = fm.getFolder("\\stats");
+		
+		if(isLoaded(warrior.getUUID())) {
+			return true;
+		}
 		
 		if(folder == null) {
 			fm.createFolder("\\stats");
@@ -148,7 +147,6 @@ public class WarriorManager {
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
 		
-		addToStatsList(warrior);
 		return false;
 	}
 	
@@ -175,7 +173,6 @@ public class WarriorManager {
 						
 						if(line.startsWith("titleID")) {
 							value = line.replaceFirst("titleID=", "");
-							System.out.println("id encontrado: " + value);
 							profile.setTitle(Integer.valueOf(value));
 						}
 					}
@@ -254,6 +251,16 @@ public class WarriorManager {
 	}
 
 	public ArrayList<Warrior> getWarriorList(){
-		return this.getWarriorList();
+		return warriorLoadedList;
+	}
+	
+	public boolean isLoaded(UUID uuid) {
+		for(Warrior w : warriorLoadedList) {
+			if(w.getUUID() == uuid) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

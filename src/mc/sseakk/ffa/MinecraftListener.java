@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,10 +26,10 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import mc.sseakk.ffa.game.Arena;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent.DeathCause;
 import mc.sseakk.ffa.game.kits.Default;
-import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.util.TimeUtil;
 
 public class MinecraftListener implements Listener{
@@ -391,7 +391,8 @@ public class MinecraftListener implements Listener{
 			}, 20L);
 		}
 	}
-
+	
+	@EventHandler
 	public void onArmorDrop(InventoryClickEvent event) {
 		Player player = (Player) event.getWhoClicked();
 		Arena arena = am.getPlayerArena(player.getName());

@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.game.warrior;
+package mc.sseakk.ffa.game;
 
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -9,12 +9,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
-import mc.sseakk.ffa.game.ArenaScoreboard;
-import mc.sseakk.ffa.game.Kits;
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.game.kits.Default;
-import mc.sseakk.ffa.mainpackage.FFA;
+import mc.sseakk.ffa.game.warrior.Stats;
+import mc.sseakk.ffa.game.warrior.StoredElements;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.Reward.RewardType;
 import mc.sseakk.ffa.reward.rewards.Title;
@@ -71,36 +71,27 @@ public class Warrior extends Profile implements Stats, StoredElements{
 		
 		this.previousLocation = this.player.getLocation();
 		this.previousScoreboard = this.player.getScoreboard();
-			
+		
 		this.flying = this.player.isFlying();
 		spawnPotionEffect = new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1);
-			
+		
 		this.player.setFoodLevel(20);
 		this.player.setHealth(20);
 		this.player.setGameMode(GameMode.SURVIVAL);
 		this.player.setExp(0.9999f);
 		
 		this.player.addPotionEffect(spawnPotionEffect);
-			
+		
 		this.player.getInventory().clear();
 		this.player.getEquipment().clear();
 		this.kit = kit;
 		this.player.updateInventory();
 		
 		if(!FFA.getWarriorManager().loadStats(this)) {
-			Messages.sendPlayerMessage(player, "&4No se pudo cargar tus estadisticas, si crees que esto es un error contacte con un administrador!");
-			Messages.warningMessage("No se pudo cargar las estadisticas de: " + player.getName());
+			Messages.warningMessage("No se pudo cargar las estadisticas de: '" + player.getName() + "'");
 		}
 		
 		ArenaScoreboard.updateStatsScoreboard(this);
-		System.out.println(title.getText());
-	}
-	
-	public Warrior(Player player) {
-		super(player);
-		this.player = player;
-		FFA.getWarriorManager().saveProfile(this);
-		FFA.getWarriorManager().loadStats(this);
 	}
 	
 	public void removePlayer() {
@@ -133,12 +124,9 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	}
 	
 	public void setTitle(int titleID) {
-		System.out.println(titleID);
 		for(Reward reward : this.playerRewards) {
-			System.out.println("reward id: " +reward.getID());
 			if(reward.getType() == RewardType.TITLE && reward.getID() == titleID) {
 				this.title = (Title) reward;
-				System.out.println("seteando title: "+ title.getID());
 				FFA.getWarriorManager().saveProfile(this);
 				super.resetHoverEvent();
 			}
@@ -255,7 +243,7 @@ public class Warrior extends Profile implements Stats, StoredElements{
 
 	@Override
 	public double getMaxDamageGiven() {
-		return this.damageTaken;
+		return this.maxDamageGiven;
 	}
 
 	@Override
@@ -270,7 +258,7 @@ public class Warrior extends Profile implements Stats, StoredElements{
 
 	@Override
 	public void setMaxDamageTaken(double maxDamageTaken) {
-		this.damageTaken = maxDamageTaken;
+		this.maxDamageTaken = maxDamageTaken;
 	}
 
 	@Override
@@ -309,9 +297,7 @@ public class Warrior extends Profile implements Stats, StoredElements{
 			this.maxDeathStreak = this.deathStreak;
 		}
 		
-		if(this.deathStreak != 0) {
-			this.deathStreak = 0;
-		}
+		this.deathStreak = 0; 
 		
 	}
 
@@ -358,11 +344,14 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	@Override
 	public void resetDamages() {
 		if(this.damageGiven > this.maxDamageGiven) {
+			System.out.println("DG: " + true);
 			this.maxDamageGiven = this.damageGiven;
+			System.out.println(this.maxDamageGiven);
 		}
 		
 		if(this.damageTaken >  this.maxDamageTaken) {
 			this.maxDamageTaken = this.damageTaken;
+			System.out.println("DT: " + true);
 		}
 		
 		this.damageGiven = 0;

@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -11,8 +11,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import mc.sseakk.ffa.game.Arena;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.game.Arena.ArenaStatus;
-import mc.sseakk.ffa.game.warrior.Warrior;
 import mc.sseakk.ffa.util.Messages;
 public class ArenasManager {
 	private FileManager fm;

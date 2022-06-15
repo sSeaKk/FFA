@@ -7,9 +7,8 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.kits.Default;
-import mc.sseakk.ffa.game.warrior.Warrior;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -48,6 +47,8 @@ public class Arena {
 	}
 	
 	public void addPlayer(Player player) {
+		Warrior warrior = new Warrior(player, new Default(player));
+		
 		if(FFA.getArenasManager().getPlayerArena(player.getName()) != null) {
 			Messages.sendPlayerMessage(player, "&cYa estas en una arena!");
 			return;
@@ -63,8 +64,11 @@ public class Arena {
 			return;
 		}
 		
-		Warrior fp = new Warrior(player, new Default(player));
-		playerList.add(fp);
+		if(FFA.getWarriorManager().isLoaded(player.getUniqueId())) {
+			warrior = FFA.getWarriorManager().get(player.getUniqueId());
+		}
+		
+		playerList.add(warrior);
 		this.currentPlayers++;
 		player.teleport(spawn);
 		

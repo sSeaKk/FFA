@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import java.io.BufferedWriter;
 import java.io.File;

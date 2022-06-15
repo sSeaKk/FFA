@@ -16,12 +16,12 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import mc.sseakk.ffa.ArenasManager;
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent;
 import mc.sseakk.ffa.game.events.WarriorKillDeathEvent.DeathCause;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
-import mc.sseakk.ffa.mainpackage.ArenasManager;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 import mc.sseakk.ffa.util.SoundUtil;
 import mc.sseakk.ffa.util.TextUtil;

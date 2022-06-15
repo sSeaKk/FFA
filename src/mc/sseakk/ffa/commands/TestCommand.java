@@ -6,10 +6,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import mc.sseakk.ffa.FFA;
+import mc.sseakk.ffa.game.Arena;
+import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent;
 import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
-import mc.sseakk.ffa.game.warrior.Warrior;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.util.Messages;
 
 public class TestCommand implements CommandExecutor{
@@ -48,6 +49,18 @@ public class TestCommand implements CommandExecutor{
 			
 			if(args[0].equals("30")) {
 				Bukkit.getServer().getPluginManager().callEvent(new WarriorKillStreakEvent(fp, KillStreakType.thirtyKS));
+			}
+			
+			if(args[0].equalsIgnoreCase("lista")) {
+				Arena arena = FFA.getArenasManager().getPlayerArena(player.getName());
+				System.out.println("lista de arena");
+				for(int i=0; i<arena.getPlayerList().size(); i++) {
+					System.out.println(arena.getPlayerList().get(i).getName() + " | iteracion: " + i);
+				}
+				System.out.println("lista de cargados");
+				for(int i=0; i<FFA.getWarriorManager().getWarriorList().size(); i++) {
+					System.out.println(FFA.getWarriorManager().getWarriorList().get(i).getName() + " | iteracion " + i);
+				}
 			}
 		}
 		

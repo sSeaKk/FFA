@@ -2,13 +2,14 @@ package mc.sseakk.ffa.gui;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.meta.ItemMeta;
 
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.gui.menu.CustomizationMenu;
 import mc.sseakk.ffa.gui.menu.MainMenu;
 import mc.sseakk.ffa.gui.menu.StatsMenu;
@@ -16,10 +17,10 @@ import mc.sseakk.ffa.gui.menu.customization.KSEffectMenu;
 import mc.sseakk.ffa.gui.menu.customization.KSSoundMenu;
 import mc.sseakk.ffa.gui.menu.customization.KillStreakMenu;
 import mc.sseakk.ffa.gui.menu.customization.TitleMenu;
-import mc.sseakk.ffa.mainpackage.FFA;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.rewards.Title;
 import mc.sseakk.ffa.util.Messages;
+import mc.sseakk.ffa.util.SoundUtil;
 
 public class GuiListener implements Listener{
 	
@@ -59,30 +60,39 @@ public class GuiListener implements Listener{
 					return;
 				}
 				
-				ItemMeta itemInSlot = event.getCurrentItem().getItemMeta();
-				Reward reward = FFA.getRewardsManager().getReward(itemInSlot.getDisplayName());
+				String displayName = ChatColor.stripColor(event.getCurrentItem().getItemMeta().getDisplayName());
+				Reward reward = FFA.getRewardsManager().getReward(displayName);
 				if(reward != null && reward instanceof Title) {
 					Title title = (Title) reward;
 					
 					if(FFA.getWarriorManager().get(player.getName()).getPlayerRewards().contains(title)) {
+						
+						if(displayName.equals(player.getName())) {
+							return;
+						}
 						
 						if(FFA.getWarriorManager().get(player.getName()).getTitle() != title) {
 							
 							FFA.getWarriorManager().get(player.getName()).setTitle(title.getID());
 							new TitleMenu(player);
 							Messages.sendPlayerMessage(player, "&aTitulo seleccionado!");
+							SoundUtil.confirmSound(player);
 							return;
 						}
 						
 						Messages.sendPlayerMessage(player, "&cEste titulo ya esta seleccionado!");
+						SoundUtil.rejectSound(player);
 						return;
 					}
 					
-					if(ChatColor.stripColor(itemInSlot.getDisplayName()).equalsIgnoreCase("Proximamente...")) {
-						Messages.sendPlayerMessage(player, "&7&oPronto añadiremos mas titulos ;)");
-					}
-					
 					Messages.sendPlayerMessage(player, "&cNo tienes este titulo disponible, juega mas para desbloquearlo.");
+					SoundUtil.rejectSound(player);
+					return;
+				}
+				
+				if(displayName.equalsIgnoreCase("Proximamente...")) {
+					Messages.sendPlayerMessage(player, "&7&oPronto agregasremos mas titulos ;)");
+					player.playSound(player.getLocation(), Sound.VILLAGER_YES, 10, 1);
 					return;
 				}
 			}

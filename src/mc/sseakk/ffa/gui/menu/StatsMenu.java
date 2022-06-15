@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import mc.sseakk.ffa.gui.Menu;
+import mc.sseakk.ffa.util.TextUtil;
 
 public class StatsMenu extends Menu{
 	public StatsMenu(Player player) {
@@ -33,11 +34,11 @@ public class StatsMenu extends Menu{
 		
 		createIcon("&6Max Damage Given", 21,
 				new ItemStack(Material.BLAZE_ROD, 1),
-				"&b"+warrior.getMaxDamageGiven());
+				"&b"+TextUtil.decimalFormat(warrior.getMaxDamageGiven()));
 		
 		createIcon("&6Max Damage Taken", 23,
 				new ItemStack(Material.BONE, 1),
-				"&b"+warrior.getMaxDamageTaken());
+				"&b"+TextUtil.decimalFormat(warrior.getMaxDamageTaken()));
 		
 		createIcon("&6Max Death Streak", 25,
 				new ItemStack(Material.REDSTONE, 1),

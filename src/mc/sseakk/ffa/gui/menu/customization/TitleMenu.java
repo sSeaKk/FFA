@@ -3,16 +3,16 @@ package mc.sseakk.ffa.gui.menu.customization;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import mc.sseakk.ffa.RewardsManager;
 import mc.sseakk.ffa.gui.Menu;
-import mc.sseakk.ffa.mainpackage.RewardsManager;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.Reward.RewardType;
 import mc.sseakk.ffa.reward.rewards.Title;
-import net.minecraft.server.v1_8_R3.Enchantment;
 
 public class TitleMenu extends Menu{
 	private ArrayList<Title> titleList = new ArrayList<Title>();
@@ -51,8 +51,9 @@ public class TitleMenu extends Menu{
 								createIcon(((Title) reward).getText(), i,
 											new ItemStack(Material.STAINED_GLASS, 1, (short) 14),
 											reward.getRarity().getName(),
-										"&cNo tienes este reward");
-							
+											"&cNo tienes este reward",
+											"&fDesbloquealo al nivel &9"+reward.getLevelToUnlock());
+								
 								this.titleList.add((Title) reward);
 								slotList.add(i);
 							}

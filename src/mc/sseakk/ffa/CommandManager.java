@@ -1,4 +1,4 @@
-package mc.sseakk.ffa.mainpackage;
+package mc.sseakk.ffa;
 
 import mc.sseakk.ffa.commands.FFACommand;
 import mc.sseakk.ffa.commands.TestCommand;

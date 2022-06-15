@@ -12,8 +12,7 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 
-import mc.sseakk.ffa.game.warrior.Warrior;
-import mc.sseakk.ffa.mainpackage.FFA;
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.util.TextUtil;
 
 public class ArenaScoreboard {

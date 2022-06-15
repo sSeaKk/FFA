@@ -8,8 +8,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionType;
 
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.Kits;
-import mc.sseakk.ffa.mainpackage.FFA;
 
 public class Default extends Kits{
 	public Default(Player player) {

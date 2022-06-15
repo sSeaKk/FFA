@@ -1,11 +1,11 @@
-package mc.sseakk.ffa.game.warrior;
+package mc.sseakk.ffa.game;
 
 import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import mc.sseakk.ffa.mainpackage.FFA;
+import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.rewards.Title;
 import mc.sseakk.ffa.util.TextUtil;
@@ -20,6 +20,7 @@ public abstract class Profile{
 				   ore;
 	protected int level,
 			 	  rank;
+	protected UUID uuid;
 	protected Player player;
 	protected TextComponent textProfile;
 	protected Title title;
@@ -28,6 +29,7 @@ public abstract class Profile{
 	public Profile(Player player) {
 		this.player = player;
 		this.playerRewards = new ArrayList<Reward>();
+		this.uuid = this.player.getUniqueId();
 		FFA.getRewardsManager().loadRewards(this);
 		this.name = player.getName();
 		this.textProfile = new TextComponent(TextUtil.colorText("&c"+name+"&r"));
@@ -102,10 +104,9 @@ public abstract class Profile{
 		this.textProfile.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(name + "\n")
 				.color(ChatColor.AQUA).append(this.title.getText()).color(ChatColor.GOLD).italic(true)
 				.create()));
-		System.out.println(this.textProfile);
 	}
 	
 	public UUID getUUID() {
-		return this.player.getUniqueId();
+		return this.uuid;
 	}
 }
