@@ -8,6 +8,6 @@ public class KSEffectMenu extends Menu{
 
 	public KSEffectMenu(Player player) {
 		super(player, "Rachas: Efectos", 45);
+		
 	}
-
 }

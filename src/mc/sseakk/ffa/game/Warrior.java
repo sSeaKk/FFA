@@ -15,9 +15,6 @@ import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.game.kits.Default;
 import mc.sseakk.ffa.game.warrior.Stats;
 import mc.sseakk.ffa.game.warrior.StoredElements;
-import mc.sseakk.ffa.reward.Reward;
-import mc.sseakk.ffa.reward.Reward.RewardType;
-import mc.sseakk.ffa.reward.rewards.Title;
 import mc.sseakk.ffa.util.Messages;
 
 public class Warrior extends Profile implements Stats, StoredElements{
@@ -121,16 +118,6 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	public void reset() {
 		this.kit = new Default(this.player);
 		this.player.setExp(0.9999f);
-	}
-	
-	public void setTitle(int titleID) {
-		for(Reward reward : this.playerRewards) {
-			if(reward.getType() == RewardType.TITLE && reward.getID() == titleID) {
-				this.title = (Title) reward;
-				FFA.getWarriorManager().saveProfile(this);
-				super.resetHoverEvent();
-			}
-		}
 	}
 	
 	public StoredElements getStored() {
@@ -344,14 +331,11 @@ public class Warrior extends Profile implements Stats, StoredElements{
 	@Override
 	public void resetDamages() {
 		if(this.damageGiven > this.maxDamageGiven) {
-			System.out.println("DG: " + true);
 			this.maxDamageGiven = this.damageGiven;
-			System.out.println(this.maxDamageGiven);
 		}
 		
 		if(this.damageTaken >  this.maxDamageTaken) {
 			this.maxDamageTaken = this.damageTaken;
-			System.out.println("DT: " + true);
 		}
 		
 		this.damageGiven = 0;

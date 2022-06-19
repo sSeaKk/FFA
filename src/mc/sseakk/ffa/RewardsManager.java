@@ -6,9 +6,13 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
+import org.bukkit.Sound;
+
 import mc.sseakk.ffa.game.Profile;
+import mc.sseakk.ffa.game.events.WarriorKillStreakEvent.KillStreakType;
 import mc.sseakk.ffa.reward.Reward;
 import mc.sseakk.ffa.reward.Reward.RewardRarity;
+import mc.sseakk.ffa.reward.rewards.KillStreakSound;
 import mc.sseakk.ffa.reward.rewards.Title;
 
 public class RewardsManager {
@@ -18,19 +22,34 @@ public class RewardsManager {
 	public RewardsManager() {
 		fm = FFA.getFileManager();
 		rewardList = new ArrayList<Reward>();
-		createTitles();
+		initTitles();
+		initKSSounds();
 	}
 	
-	public static void createTitles() {
+	public static void createTitle(String title, RewardRarity rarity, int level) {
+		rewardList.add(new Title(title, rarity, level));
+	}
+	
+	public static void createKSSound(Sound sound, RewardRarity rarity, int level, KillStreakType type) {
+		rewardList.add(new KillStreakSound(sound, rarity, level, type));
+	}
+	
+	public static void initTitles() {
 		createTitle("Novato", RewardRarity.COMMON, 0);
 		createTitle("Peleador", RewardRarity.COMMON, 0);
 		createTitle("Asesino", RewardRarity.COMMON, 0);
 		createTitle("Invencible", RewardRarity.COMMON, 2);
 		createTitle("Promesa", RewardRarity.RARE, 5);
+		createTitle("El Pichula", RewardRarity.COMMON, 0);
 	}
 	
-	public static void createTitle(String title, RewardRarity rarity, int level) {
-		rewardList.add(new Title(title, rarity, level));
+	public static void initKSSounds() {
+		createKSSound(Sound.SILVERFISH_KILL, RewardRarity.COMMON, 0, KillStreakType.fiveKS);
+		createKSSound(Sound.BLAZE_DEATH, RewardRarity.COMMON, 0, KillStreakType.tenKS);
+		createKSSound(Sound.GHAST_SCREAM, RewardRarity.COMMON, 0, KillStreakType.fifthteenKS);
+		createKSSound(Sound.ENDERMAN_DEATH, RewardRarity.COMMON, 0, KillStreakType.twentyKS);
+		createKSSound(Sound.WITHER_DEATH, RewardRarity.COMMON, 0, KillStreakType.twentyfiveKS);
+		createKSSound(Sound.ENDERDRAGON_GROWL, RewardRarity.COMMON, 0, KillStreakType.thirtyKS);
 	}
 	
 	public static ArrayList<Reward> getRewardList(){
@@ -54,6 +73,12 @@ public class RewardsManager {
 					return reward;
 				}
 			}
+			
+			if(reward instanceof KillStreakSound) {
+				if(((KillStreakSound) reward).getName().equalsIgnoreCase(rewardName)) {
+					return reward;
+				}
+			}
 		}
 		
 		return null;
@@ -61,7 +86,8 @@ public class RewardsManager {
 	
 	public void assignPlayerRewards(Profile player) {
 		for(Reward reward : rewardList) {
-			if(player.getLevel() == reward.getLevelToUnlock()) {
+			if(player.getLevel() == reward.getLevelToUnlock() && !player.getPlayerRewards().contains(reward)) {
+				System.out.println("asignando " + reward.getType().name());
 				player.addReward(reward);
 			}
 		}
@@ -86,9 +112,8 @@ public class RewardsManager {
 							if(scn.hasNextLine()) {
 								while(scn.hasNextInt()) {
 									profile.addReward(FFA.getRewardsManager().getReward(scn.nextInt()));
+									assignPlayerRewards(profile);
 								} 
-							} else {
-								assignPlayerRewards(profile);
 							}
 						}
 					}
@@ -98,6 +123,8 @@ public class RewardsManager {
 				}
 			} catch (FileNotFoundException e) {e.printStackTrace();}
 		}
+		
+		assignPlayerRewards(profile);
 		return false;
 	}
 }

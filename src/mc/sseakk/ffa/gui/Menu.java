@@ -16,7 +16,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.game.Warrior;
+import mc.sseakk.ffa.gui.menu.CustomizationMenu;
 import mc.sseakk.ffa.gui.menu.MainMenu;
+import mc.sseakk.ffa.gui.menu.customization.KillStreakMenu;
 import mc.sseakk.ffa.util.TextUtil;
 import net.md_5.bungee.api.ChatColor;
 
@@ -45,14 +47,18 @@ public class Menu{
 		if(!(this instanceof MainMenu)) {
 			createIcon("&fVolver", this.slots-9,
 						 new ItemStack(Material.FEATHER, 1),
-						 "&7Clickea para volver al Menu Principal");
+						 "&7Clickea para volver atras");
+		}
+		
+		if(!playerMenuOpened.containsKey(player)) {
+			playerMenuOpened.put(player, this);
 		}
 		
 		openedGui.add(player);
 		player.openInventory(menu);
 	}
 	
-	public Inventory getMenu(){
+	public Inventory getMenu() {
 		return this.menu;
 	}
 	
@@ -98,7 +104,7 @@ public class Menu{
 		this.menu.setItem(slot, item);
 	}
 	
-	protected void addOpenedMenuToPlayer(Player player, Menu menu) {
+	protected void putOpenedMenuToPlayer(Player player, Menu menu) {
 		if(playerMenuOpened.containsKey(player)) {
 			playerMenuOpened.remove(player);
 		}
@@ -108,5 +114,19 @@ public class Menu{
 	
 	public static Menu getPlayerOpenMenu(Player player) {
 		return playerMenuOpened.get(player);
+	}
+	
+	public static void openPrevMenu(Player player, String menuName) {
+		if(menuName.equals("Estadisticas") || menuName.equals("Personalizacion")) {
+			new MainMenu(player);
+		}
+		
+		if(menuName.equals("Titulos") || menuName.equals("Rachas")) {
+			new CustomizationMenu(player);
+		}
+		
+		if(menuName.equals("Rachas: Efectos") || menuName.equals("Rachas: Sonidos")) {
+			new KillStreakMenu(player);
+		}
 	}
 }

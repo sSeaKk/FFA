@@ -11,7 +11,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import mc.sseakk.ffa.FFA;
 import mc.sseakk.ffa.gui.menu.CustomizationMenu;
-import mc.sseakk.ffa.gui.menu.MainMenu;
 import mc.sseakk.ffa.gui.menu.StatsMenu;
 import mc.sseakk.ffa.gui.menu.customization.KSEffectMenu;
 import mc.sseakk.ffa.gui.menu.customization.KSSoundMenu;
@@ -32,7 +31,7 @@ public class GuiListener implements Listener{
 			
 			if(event.getClickedInventory().getName() != "Menu Principal") {
 				if(event.getSlot() == event.getClickedInventory().getSize()-9) {
-					new MainMenu(player);
+					Menu.openPrevMenu(player, event.getClickedInventory().getName());
 				}
 			}
 			

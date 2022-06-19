@@ -10,7 +10,7 @@ import mc.sseakk.ffa.gui.Menu;
 public class CustomizationMenu extends Menu{
 	public CustomizationMenu(Player player) {
 		super(player, "Personalizacion", 27);
-		addOpenedMenuToPlayer(player, this);
+		putOpenedMenuToPlayer(player, this);
 		
 		createIcon("&6Titulo", 11,
 					new ItemStack(Material.NAME_TAG),

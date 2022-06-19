@@ -11,6 +11,7 @@ import java.util.UUID;
 import mc.sseakk.ffa.game.Profile;
 import mc.sseakk.ffa.game.Warrior;
 import mc.sseakk.ffa.reward.Reward;
+import mc.sseakk.ffa.reward.rewards.KillStreakSound;
 import mc.sseakk.ffa.util.Messages;
 
 public class WarriorManager {
@@ -188,34 +189,7 @@ public class WarriorManager {
 	public void saveAllProfiles() {
 		Messages.infoMessage("Guardando prefiles");
 		for(Warrior profile : warriorLoadedList) {
-			fm.createFile("\\profile", profile.getUUID().toString());
-			
-			BufferedWriter writer = fm.getBufferedWriter();
-			
-			try {
-				writer.write("name="+profile.getName());
-				writer.newLine();
-				
-				writer.write("level="+profile.getLevel());
-				writer.newLine();
-				
-				writer.write("titleID="+profile.getTitle().getID());
-				writer.newLine();
-				
-				writer.newLine();
-				writer.write("Rewards:");
-				
-				if(!profile.getPlayerRewards().isEmpty()) {
-					writer.newLine();
-					for(Reward reward : profile.getPlayerRewards()) {
-						writer.write(reward.getID() + " ");
-					}
-				}
-				
-				writer.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
+			saveProfile(profile);
 		}
 	}
 	
@@ -233,6 +207,15 @@ public class WarriorManager {
 			
 			writer.write("titleID="+profile.getTitle().getID());
 			writer.newLine();
+			
+			for(int i=5; i<30; i++) {
+				if(i % 5 == 0) {
+					System.out.println("iteracion " + i);
+					KillStreakSound kss = profile.getKSSound(i);
+					System.out.println("guardando " + kss.getSound().name() + " id:" + kss.getID());
+					writer.write(kss.getKSType().name()+"="+kss.getID());
+				}
+			}
 			
 			writer.newLine();
 			writer.write("Rewards:");

@@ -10,7 +10,7 @@ import mc.sseakk.ffa.util.TextUtil;
 public class MainMenu extends Menu{
 	public MainMenu(Player player){
 		super(player, TextUtil.colorText("Menu Principal"), 18);
-		addOpenedMenuToPlayer(player, this);
+		putOpenedMenuToPlayer(player, this);
 		
 		createIcon("&6Estadisticas", 13,
 				   new ItemStack(Material.PAPER, 1),

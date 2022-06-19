@@ -8,6 +8,7 @@ public class KSSoundMenu extends Menu{
 
 	public KSSoundMenu(Player player) {
 		super(player, "Rachas: Sonidos", 45);
+		
+		
 	}
-
 }

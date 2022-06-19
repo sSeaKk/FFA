@@ -6,7 +6,6 @@ import java.util.Arrays;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
-import org.bukkit.Sound;
 import org.bukkit.FireworkEffect.Type;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
@@ -136,12 +135,8 @@ public class ArenaListener implements Listener{
 			meta.addEffect(FireworkEffect.builder().with(Type.BURST).withColor(colors).build());
 			firework.setFireworkMeta(meta);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 5 kills sin morir!"));
-			SoundUtil.killStreakSound(arena, Sound.SILVERFISH_HIT);
-			
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 5 kills sin morir!"));
 			colors.clear();
-			return;
 		}
 		
 		if(event.getType().equals(KillStreakType.tenKS)) {
@@ -151,11 +146,8 @@ public class ArenaListener implements Listener{
 			meta.addEffect(FireworkEffect.builder().trail(true).with(Type.BALL).withColor(colors).build());
 			firework.setFireworkMeta(meta);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 10 kills sin morir!!"));
-			SoundUtil.killStreakSound(arena, Sound.BLAZE_DEATH);
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 10 kills sin morir!!"));
 			colors.clear();
-			return;
 		}
 		
 		if(event.getType().equals(KillStreakType.fifthteenKS)) {
@@ -165,11 +157,8 @@ public class ArenaListener implements Listener{
 			meta.addEffect(FireworkEffect.builder().flicker(true).with(Type.BALL_LARGE).withColor(colors).withFade(Color.RED).build());
 			firework.setFireworkMeta(meta);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 15 kills sin morir!!"));
-			SoundUtil.killStreakSound(arena, Sound.GHAST_SCREAM);
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 15 kills sin morir!!"));
 			colors.clear();
-			return;
 		}
 
 		if(event.getType().equals(KillStreakType.twentyKS)) {
@@ -179,11 +168,8 @@ public class ArenaListener implements Listener{
 			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.STAR).withColor(colors).withFade(Color.RED).build());
 			firework.setFireworkMeta(meta);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 20 kills sin morir!!!!"));
-			SoundUtil.killStreakSound(arena, Sound.ENDERMAN_DEATH);
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 20 kills sin morir!!!!"));
 			colors.clear();
-			return;
 		}
 		
 		if(event.getType().equals(KillStreakType.twentyfiveKS)) {
@@ -193,11 +179,8 @@ public class ArenaListener implements Listener{
 			meta.addEffect(FireworkEffect.builder().flicker(true).trail(true).with(Type.STAR).withColor(colors).withFade(Color.RED).build());
 			firework.setFireworkMeta(meta);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 25 kills sin morir!!!!"));
-			SoundUtil.killStreakSound(arena, Sound.WITHER_DEATH);
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 25 kills sin morir!!!!"));
 			colors.clear();
-			return;
 		}
 		
 		if(event.getType().equals(KillStreakType.thirtyKS)) {
@@ -220,13 +203,11 @@ public class ArenaListener implements Listener{
 				
 			}, 3L);
 			
-			arena.broadcast(FFA.getTextTag(), event.getFFAPlayer().getText(), TextUtil.stringToTextComponent(" &6lleva 30 kills sin morir!!!!!!"));
-			SoundUtil.killStreakSound(arena, Sound.ENDERDRAGON_GROWL);
-			
+			arena.broadcast(FFA.getTextTag(), event.getWarrior().getText(), TextUtil.stringToTextComponent(" &6lleva 30 kills sin morir!!!!!!"));
 			colors.clear();
-			return;
 		}
 		
+		SoundUtil.killStreakSound(arena, event.getSound());
 		return;
 	}
 }

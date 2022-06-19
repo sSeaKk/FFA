@@ -11,7 +11,7 @@ import mc.sseakk.ffa.util.TextUtil;
 public class StatsMenu extends Menu{
 	public StatsMenu(Player player) {
 		super(player, "Estadisticas", 36);
-		addOpenedMenuToPlayer(player, this);
+		putOpenedMenuToPlayer(player, this);
 		
 		createIcon("&6Kills", 11,
 					 new ItemStack(Material.DIAMOND_SWORD, 1), 

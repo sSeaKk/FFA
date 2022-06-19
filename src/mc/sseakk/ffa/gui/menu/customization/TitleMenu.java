@@ -21,7 +21,7 @@ public class TitleMenu extends Menu{
 	public TitleMenu(Player player) {
 		super(player, "Titulos", 45);
 		slotList = new ArrayList<Integer>();
-		addOpenedMenuToPlayer(player, this);
+		putOpenedMenuToPlayer(player, this);
 		
 		for(int i=0; i<menu.getSize(); i++) {
 			if(i > 8 && i < 36 && i % 9 != 0 && (i+1) % 9 != 0){
@@ -34,12 +34,12 @@ public class TitleMenu extends Menu{
 											new ItemStack(Material.STAINED_GLASS, 1, (short) 1),
 											Enchantment.KNOCKBACK,
 											ItemFlag.HIDE_ENCHANTS,
-											reward.getRarity().getName(),
+											reward.getRarity().getColor()+reward.getRarity().name(),
 											"&6Titulo seleccionado");
 								} else {
 									createIcon(((Title) reward).getText(), i,
 											new ItemStack(Material.STAINED_GLASS, 1, (short) 13),
-											reward.getRarity().getName(),
+											reward.getRarity().getColor()+reward.getRarity().name(),
 											"&aClick para seleccionar");
 								}
 								
@@ -50,7 +50,7 @@ public class TitleMenu extends Menu{
 							if(!this.titleList.contains(reward) && !slotList.contains(i)) {
 								createIcon(((Title) reward).getText(), i,
 											new ItemStack(Material.STAINED_GLASS, 1, (short) 14),
-											reward.getRarity().getName(),
+											reward.getRarity().getColor()+reward.getRarity().name(),
 											"&cNo tienes este reward",
 											"&fDesbloquealo al nivel &9"+reward.getLevelToUnlock());
 								
